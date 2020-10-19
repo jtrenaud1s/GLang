@@ -1,0 +1,39 @@
+<program>             ::= <entryclass>
+<class>               ::= "class" <id> <block>
+<entryclass>          ::= "class" <id> "entry" <id> <block>
+<block>               ::= "{" <statementlist> "}"
+<statementlist>       ::= <statement> { <statement> }
+<statement>           ::= ( <assignment> | <declaration> | <functioncall> | <output> | <input> ) [";"] | <if> | <while> | <for> | <functiondeclaration>
+<functiondeclaration> ::= <type> <id> <paramsdeclaration> <block>
+<functioncall>        ::= <id> <params>
+<while>               ::= "while" "(" <expr> ")" <block>
+<for>                 ::= for "("[(<declaration> | <digit>)]"," (<digit> | <ref>) ["," <digit> | <ref>] | <declaration> "of" <ref> ")" <block>
+<assignment>          ::= (<declaration> | <ref>) ("=" | "is") <expr>
+<declaration>         ::= <type> <id>["[" [<expr>] "]"]
+<type>                ::= "int" | "double" | "char" | "string" | "bool"
+<primitive>           ::= <int> | <double> | <char> | <string> | "nothing"
+<expr>                ::= <expr> ("+" | "-") <term> | <term>
+<term>                ::= <term> ("*" | "/" | "%" | "//") <factor> | <factor>
+<factor>              ::= <factor> ("^") <equality> | <equality>
+<equality>            ::= <equality> ("=="|"is"|"isnot"|"~") <relational> | <relational>
+<relational>          ::= <relational> ("<" | ">" | "<=" | ">=") <booleanterm> | <booleanterm>
+<booleanterm>         ::= <booleanterm> ("||" || "or") <booleanfactor> | <booleanfactor>
+<booleanfactor>       ::= <booleanterm> ("&&" or "and") <booleanterm> | <group>
+<group>               ::= "(" <expr> ")" | <literal> | <ref>
+<output>              ::= "print" (<expr> | <primitive> | <ref> | <functioncall>)
+<input>               ::= "read" (<ref>)
+<int>                 ::= ["+"|"-"]<digit>{<digit>}
+<double>              ::= <digit>{<digit>} "." <digit>{<digit>}
+<char>                ::= "'" (<letter> | <escape> | <symbol> | <digit>) "'"
+                        | <ref> | <digit> { <digit> }
+<string>              ::= "\"" <char>{<char>} "\""
+<bool>                ::= "true" | "false" | "1" | "0"
+<params>              ::= "("[ <ref> | <primitive> {"," <ref> | <primitive> }]")"
+<paramsdeclaration>   ::= "("[ <type> <id> {"," <type> <id> }]")"
+<id>                  ::= <letter>{<letter>|<digit>}
+<ref>                 ::= <id>["[" <expr> "]"]
+<digit>               ::= <literal>{<literal>}
+<literal>             ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<letter>              ::= A-Za-z
+<escape>              ::= ("\\" <char>)
+<symbol>              ::= a special symbol { <symbol> }
