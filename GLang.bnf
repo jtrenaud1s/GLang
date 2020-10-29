@@ -17,8 +17,8 @@
 <factor>              ::= <factor> ("^") <equality> | <equality>
 <equality>            ::= <equality> ("=="|"is"|"isnot"|"~") <relational> | <relational>
 <relational>          ::= <relational> ("<" | ">" | "<=" | ">=") <booleanterm> | <booleanterm>
-<booleanterm>         ::= <booleanterm> ("||" || "or") <booleanfactor> | <booleanfactor>
-<booleanfactor>       ::= <booleanterm> ("&&" or "and") <booleanterm> | <group>
+<booleanterm>         ::= <booleanterm> ("||" | "or") <booleanfactor> | <booleanfactor>
+<booleanfactor>       ::= <booleanterm> ("&&" 'or' "and") <booleanterm> | <group>
 <group>               ::= "(" <expr> ")" | <literal> | <ref>
 <output>              ::= "print" (<expr> | <primitive> | <ref> | <functioncall>)
 <input>               ::= "read" (<ref>)
