@@ -33,7 +33,7 @@
 <alphanumerics> ::= <alphanumeric>
                 |   <alphanumeric> <alphanumerics>
 
-<alphanumeric>      ::= <letter> | <digit>
+<alphanumeric>  ::= <letter> | <digit>
 
 <literal>       ::= <digit>
                 |   <digit> <literal>
