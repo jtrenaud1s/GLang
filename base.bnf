@@ -30,7 +30,7 @@
 <id>            ::= <letters>
                 |   <letters> <alphanumerics>
 
-<alphanumerics>     ::= <alphanumeric>
+<alphanumerics> ::= <alphanumeric>
                 |   <alphanumeric> <alphanumerics>
 
 <alphanumeric>      ::= <letter> | <digit>
