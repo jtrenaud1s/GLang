@@ -43,3 +43,5 @@ When the code reviews are done for that pull request, I will squash and merge th
 If someone merges changes in to the main branch, but you were working on code that uses an older version of the main branch, you can rebase the main branch, and it will "undo" your changes to the code, update the code to reflect the new version of the main branch, then redo your changes ontop of that new version of the main branch. 
 
 Test your code. From here you can commit, push, and create a PR (pull request)
+
+Garzaaa was hereee :)
