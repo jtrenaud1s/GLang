@@ -1,0 +1,46 @@
+<entrypoint>    ::= <statementList>
+
+<statementList> ::= <statement> ';'
+                |   <statementList> <statement> ';'
+
+<statement>     ::= <declaration>
+                |   <assign>
+                |   <output>
+                |   <input>
+                |   <expr>
+
+<declaration>   ::= <id>
+
+<assign>        ::= <ref> '=' <expr>
+
+<output>        ::= 'print' <expr>
+
+<input>         ::= 'read' <ref>
+
+<expr>          ::= <group> '-' <expr>
+                |   <group> '+' <expr>
+                |   <group>
+
+<group>         ::= '(' <expr> ')'
+                |   <literal>
+                |   <ref>
+
+<ref>           ::= <id>
+
+<id>            ::= <letters>
+                |   <letters> <alphanumerics>
+
+<alphanumerics> ::= <alphanumeric>
+                |   <alphanumeric> <alphanumerics>
+
+<alphanumeric>  ::= <letter> | <digit>
+
+<literal>       ::= <digit>
+                |   <digit> <literal>
+
+<letters>       ::= <letter> | <letter> <letters>
+
+<letter>        ::= 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+                |   'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+
+<digit>         ::=  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9
