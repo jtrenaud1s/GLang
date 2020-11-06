@@ -1,9 +1,7 @@
 package edu.semo.jatsz.glang.parsenode;
 
 public interface ParseNode {
+    Type getType();
     void print(String prefix);
-
-    Object evaluate();
-
-    String generate();
+    ParseNode evaluate();
 }

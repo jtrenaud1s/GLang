@@ -1,0 +1,10 @@
+int i;
+i = 1;
+print i;
+i = i + 2;
+print i;
+read i;
+print i + 5;
+read i;
+i = i - 5;
+print i;
