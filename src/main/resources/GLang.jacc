@@ -1,0 +1,142 @@
+%class Parser
+%package edu.semo.jatsz.glang
+%interface Tokens
+%next next()
+%get lexer.getToken()
+%semantic Object : lexer.getValue()
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM
+%token INT PRINT READ
+%right EQUAL
+
+%{
+import edu.semo.jatsz.glang.parsenode.*;
+import edu.semo.jatsz.glang.parsenode.statement.*;
+import edu.semo.jatsz.glang.model.*;
+%}
+
+%%
+
+entrypoint: statementList
+{
+    this.entryPoint = (ParseNode) $1;
+}
+;
+
+statementList: statement SEMI
+{
+    $$ = new StatementListNode((StatementNode) $1);
+}
+| statementList statement SEMI
+{
+    ((StatementListNode) $1).add((StatementNode) $2);
+    $$ = $1;
+}
+;
+
+statement: declaration
+| assign
+| output
+| input
+;
+
+declaration: INT ID
+{
+    $$ = new DeclarationNode(Type.INT, (String) $2);
+}
+;
+
+assign: ref EQUAL expr
+{
+    $$ = new AssignmentNode((ReferenceNode)$1, (ParseNode)$3);
+}
+;
+
+output: PRINT expr
+{
+    $$ = new StdOutNode((ParseNode)$2);
+}
+;
+
+input: READ ref
+{
+    $$ = new StdInNode((ReferenceNode) $2);
+}
+;
+
+expr: group SUB expr
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "-", (ParseNode) $3);
+}
+| group ADD expr
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "+", (ParseNode) $3);
+}
+| group
+;
+
+group: LPAREN expr RPAREN
+{
+    $$ = new GroupNode((ParseNode)$2);
+}
+| ref
+| LITERAL
+{
+    $$ = new Symbol(Type.INT, "literal", (Integer) $1);
+}
+;
+
+ref: ID
+{
+    $$ = new ReferenceNode((String) $1);
+}
+;
+
+%%
+    private Lexer lexer;
+    private ParseNode entryPoint;
+    private ParseNode currentNode;
+
+    public Parser(java.io.InputStream in)
+    {
+        lexer = new Lexer(in);
+        new ParseTree();
+    }
+
+
+    public ParseNode getEntryPoint()
+    {
+        return entryPoint;
+    }
+
+    /*SymbolTable addDeclaration(Object sym, Object decl) {
+        if(sym == null)
+            sym = new SymbolTable();
+        SymbolTable table = (SymbolTable)sym;
+        DeclarationNode declaration = (DeclarationNode)decl;
+        table.set(declaration.getName(), new Symbol(declaration.getType(), "declaration", null));
+        return table;
+    }*/
+
+
+    public int next() {
+        lexer.next();
+        return lexer.getToken();
+    }
+
+
+    public void yyerror(String msg) {
+        lexer.printError("ERROR: " + msg);
+    }
+
+
+    public static void main(String [] args) {
+        try {
+            Parser parser = new Parser(new java.io.FileInputStream(args[0]));
+            parser.next();
+            if(parser.parse()) {
+                parser.getEntryPoint().evaluate();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
