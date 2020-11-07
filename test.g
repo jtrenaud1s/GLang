@@ -1,11 +1,8 @@
-int i;
-int j;
-i = 1;
-j = 10;
-
-print i + j;
+double j;
+j = 10.0;
 
 double k;
-read k;
+k = 5.0;
 
-print k;
+print j*k;
+print j/k;

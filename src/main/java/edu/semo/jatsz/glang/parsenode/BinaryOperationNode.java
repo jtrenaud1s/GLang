@@ -61,6 +61,12 @@ public class BinaryOperationNode implements ParseNode{
             case "-":
                 result = lval - rval;
                 break;
+            case "*":
+                result = lval * rval;
+                break;
+            case "/":
+                result = lval / rval;
+                break;
             default:
                 System.out.println("ERROR DOING MATH");
                 System.exit(-1);

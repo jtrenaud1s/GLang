@@ -7,6 +7,7 @@
 %token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM
 %token INT DOUBLE PRINT READ
 %right EQUAL
+%left MULTIPLY DIVIDE
 
 %{
 import edu.semo.jatsz.glang.parsenode.*;
@@ -67,13 +68,24 @@ input: READ ref
 }
 ;
 
-expr: group SUB expr
+expr: term SUB expr
 {
     $$ = new BinaryOperationNode((ParseNode) $1, "-", (ParseNode) $3);
 }
-| group ADD expr
+| term ADD expr
 {
     $$ = new BinaryOperationNode((ParseNode) $1, "+", (ParseNode) $3);
+}
+| term
+;
+
+term: term MULTIPLY group
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "*", (ParseNode) $3);
+}
+| term DIVIDE group
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "/", (ParseNode) $3);
 }
 | group
 ;
