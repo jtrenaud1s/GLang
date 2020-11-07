@@ -120,7 +120,11 @@ public class Lexer implements Tokens {
         } else if (value.equals("read")) {
             token = READ;
             value = null;
-        } else if (!Character.isDigit(value.toString().toCharArray()[0])) {
+        }else if(value.equals("while")){
+            token=WHILE;
+            value = null;
+        }
+        else if (!Character.isDigit(value.toString().toCharArray()[0])) {
             token = ID;
             value = sb.toString();
         } else {
@@ -159,8 +163,8 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' };
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW};
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}'};
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY};
 
         // skip whitespace
         while (Character.isWhitespace(currentChar)) {
