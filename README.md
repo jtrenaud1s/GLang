@@ -45,3 +45,5 @@ If someone merges changes in to the main branch, but you were working on code th
 Test your code. From here you can commit, push, and create a PR (pull request)
 
 Garzaaa was hereee :)
+
+Tushar Saini
