@@ -5,7 +5,7 @@
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
 %token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM
-%token INT PRINT READ
+%token INT DOUBLE PRINT READ
 %right EQUAL
 
 %{
@@ -42,6 +42,10 @@ statement: declaration
 declaration: INT ID
 {
     $$ = new DeclarationNode(Type.INT, (String) $2);
+}
+| DOUBLE ID
+{
+    $$ = new DeclarationNode(Type.DOUBLE, (String) $2);
 }
 ;
 
@@ -81,7 +85,11 @@ group: LPAREN expr RPAREN
 | ref
 | LITERAL
 {
-    $$ = new Symbol(Type.INT, "literal", (Integer) $1);
+    $$ = new Symbol(Type.INT, "int-literal", (Integer) $1);
+}
+| DOUBLE
+{
+    $$ = new Symbol(Type.DOUBLE, "double-literal", (Double) $1);
 }
 ;
 

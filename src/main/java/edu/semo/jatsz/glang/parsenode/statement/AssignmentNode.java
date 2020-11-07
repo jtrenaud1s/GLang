@@ -1,6 +1,5 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
-import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
@@ -16,6 +15,12 @@ public class AssignmentNode extends StatementNode {
         this.type = referenceNode.getType();
         this.ref = referenceNode;
         this.expression = parseNode;
+
+        // Compare types of the variable and the value you're trying to store in it.
+        if(ref.getType().equals(Type.INT) && expression.getType().equals(Type.DOUBLE)) {
+            System.out.println("Cannot store a double value in an integer variable, you will lose data!");
+            System.exit(-1);
+        }
     }
 
     @Override
@@ -31,8 +36,16 @@ public class AssignmentNode extends StatementNode {
 
     @Override
     public ParseNode evaluate() {
+
         Symbol s = (Symbol) ref.evaluate();
         Symbol n = (Symbol) expression.evaluate();
+
+        if(s.getType().equals(Type.DOUBLE) && n.getType().equals(Type.INT)) {
+            double value = (Integer) n.getValue();
+            n.setValue(value);
+        }
+
+
         s.set(n);
         return null;
     }

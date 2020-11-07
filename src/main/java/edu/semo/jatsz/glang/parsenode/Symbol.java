@@ -39,10 +39,6 @@ public class Symbol implements ParseNode {
         return this;
     }
 
-    public String generate() {
-        return null;
-    }
-
     public void set(Type type, Object value) {
         this.type = type;
         this.value = value;

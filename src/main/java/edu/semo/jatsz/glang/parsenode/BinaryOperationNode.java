@@ -11,10 +11,14 @@ public class BinaryOperationNode implements ParseNode{
         this.operation = operation;
         this.right = right;
 
-        if(!left.getType().equals(Type.INT) || !right.getType().equals(Type.INT)) {
+        if(left.getType().equals(Type.INT) && right.getType().equals(Type.DOUBLE)) {
+            System.out.println("Invalid Types!");
+            System.exit(-1);
+        } else if(left.getType().equals(Type.DOUBLE) && right.getType().equals(Type.INT)) {
             System.out.println("Invalid Types!");
             System.exit(-1);
         }
+
         this.type = left.getType();
     }
 
@@ -32,10 +36,23 @@ public class BinaryOperationNode implements ParseNode{
 
     @Override
     public ParseNode evaluate() {
-        int lval = (Integer) ((Symbol)left.evaluate()).getValue();
-        int rval = (Integer) ((Symbol)right.evaluate()).getValue();
+        double lval;
+        double rval;
+        double result = 0;
 
-        int result = 0;
+        if(left.getType().equals(Type.INT)) {
+            lval = (Integer) ((Symbol)left.evaluate()).getValue();
+        } else {
+            lval = (Double) ((Symbol)left.evaluate()).getValue();
+        }
+
+
+        if(right.getType().equals(Type.INT)) {
+            rval = (Integer) ((Symbol)right.evaluate()).getValue();
+        } else {
+            rval = (Double) ((Symbol)right.evaluate()).getValue();
+        }
+
 
         switch(this.operation) {
             case "+":
@@ -48,6 +65,10 @@ public class BinaryOperationNode implements ParseNode{
                 System.out.println("ERROR DOING MATH");
                 System.exit(-1);
         }
-        return new Symbol(Type.INT, "binOpNodeResult", result);
+
+        if(this.getType().equals(Type.DOUBLE))
+            return new Symbol(this.type, "binOpNodeResult", result);
+        else
+            return new Symbol(this.type, "binOpNodeResult",(int) result);
     }
 }
