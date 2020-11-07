@@ -47,3 +47,7 @@ Test your code. From here you can commit, push, and create a PR (pull request)
 Garzaaa was hereee :)
 
 garzzzaaaa was here again
+
+Jordan Renaud
+
+Shane Hoock 
