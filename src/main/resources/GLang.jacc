@@ -4,11 +4,12 @@
 %next next()
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
-%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM
-%token INT DOUBLE PRINT READ
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY
+%token INT DOUBLE PRINT READ WHILE
 %right EQUAL
 %left MULTIPLY DIVIDE
 %left POW
+
 
 %{
 import edu.semo.jatsz.glang.parsenode.*;
@@ -39,7 +40,13 @@ statement: declaration
 | assign
 | output
 | input
+| while
 ;
+
+while: WHILE LPAREN expr RPAREN LCURLY statementList RCURLY
+{
+    $$ = new WhileStatementNode((ParseNode)$3, (StatementListNode)$6);
+};
 
 declaration: INT ID
 {
