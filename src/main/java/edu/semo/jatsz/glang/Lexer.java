@@ -159,8 +159,8 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/' };
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE };
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' };
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW};
 
         // skip whitespace
         while (Character.isWhitespace(currentChar)) {

@@ -1,8 +1,7 @@
-double j;
-j = 10.0;
-
-double k;
-k = 5.0;
-
-print j*k;
-print j/k;
+int i;
+int j;
+int k;
+k = 2;
+i = 5;
+j = 2;
+print i ^ j ^ k;

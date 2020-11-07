@@ -8,6 +8,7 @@
 %token INT DOUBLE PRINT READ
 %right EQUAL
 %left MULTIPLY DIVIDE
+%left POW
 
 %{
 import edu.semo.jatsz.glang.parsenode.*;
@@ -79,13 +80,20 @@ expr: term SUB expr
 | term
 ;
 
-term: term MULTIPLY group
+term: term MULTIPLY factor
 {
     $$ = new BinaryOperationNode((ParseNode) $1, "*", (ParseNode) $3);
 }
-| term DIVIDE group
+| term DIVIDE factor
 {
     $$ = new BinaryOperationNode((ParseNode) $1, "/", (ParseNode) $3);
+}
+| factor
+;
+
+factor: factor POW group
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "^", (ParseNode) $3);
 }
 | group
 ;
