@@ -26,11 +26,15 @@ public class StdInNode extends StatementNode {
     @Override
     public ParseNode evaluate() {
         String value = ParseTree.get().getScanner().nextLine().trim();
-
         try {
             ((Symbol)ref.evaluate()).setValue(Integer.parseInt(value));
         } catch (Exception e){
-            System.out.println("Input was not an int!");
+            //System.out.println("Input was not an int!");
+            try {
+                ((Symbol)ref.evaluate()).setValue(Double.parseDouble(value));
+            } catch (Exception e2) {
+                //System.out.println("Input was not a double!");
+            }
         }
         return null;
     }

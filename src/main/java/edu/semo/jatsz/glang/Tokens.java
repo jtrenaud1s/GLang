@@ -1,4 +1,4 @@
-// Output created by jacc on Thu Nov 05 20:55:59 CST 2020
+// Output created by jacc on Fri Nov 06 20:08:40 CST 2020
 
 package edu.semo.jatsz.glang;
 
@@ -7,15 +7,16 @@ interface Tokens {
     int ADD = 1;
     int ALPHA = 2;
     int ALPHANUM = 3;
-    int EQUAL = 4;
-    int ID = 5;
-    int INT = 6;
-    int LITERAL = 7;
-    int LPAREN = 8;
-    int PRINT = 9;
-    int READ = 10;
-    int RPAREN = 11;
-    int SEMI = 12;
-    int SUB = 13;
-    int error = 14;
+    int DOUBLE = 4;
+    int EQUAL = 5;
+    int ID = 6;
+    int INT = 7;
+    int LITERAL = 8;
+    int LPAREN = 9;
+    int PRINT = 10;
+    int READ = 11;
+    int RPAREN = 12;
+    int SEMI = 13;
+    int SUB = 14;
+    int error = 15;
 }

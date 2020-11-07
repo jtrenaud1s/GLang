@@ -112,6 +112,8 @@ public class Lexer implements Tokens {
 
         if (value.equals("int")) {
             token = INT;
+        } else if (value.equals("double")) {
+            token = DOUBLE;
         } else if (value.equals("print")) {
             token = PRINT;
             value = null;
@@ -137,8 +139,21 @@ public class Lexer implements Tokens {
             sb.append(currentChar);
             nextChar();
         }
-        value = Integer.valueOf(sb.toString());
-        token = LITERAL;
+        //grab the fractional part (if there is one)
+        if (currentChar == '.') {
+            sb.append('.');
+            nextChar();
+            while (Character.isDigit(currentChar)) {
+                sb.append(currentChar);
+                nextChar();
+            }
+            token = DOUBLE;
+            value = Double.valueOf(sb.toString());
+        } else {
+            value = Integer.valueOf(sb.toString());
+            token = LITERAL;
+            return;
+        }
     }
 
 
@@ -188,6 +203,7 @@ public class Lexer implements Tokens {
         label[SEMI] = "SEMI";
         label[INT] = "INT";
         label[ENDINPUT] = "ENDINPUT";
+        label[DOUBLE] = "DOUBLE";
         label[PRINT] = "PRINT";
         label[READ] = "READ";
         label[error] = "error";
