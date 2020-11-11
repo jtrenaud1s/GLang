@@ -1,4 +1,4 @@
-// Output created by jacc on Tue Nov 10 21:57:33 CST 2020
+// Output created by jacc on Tue Nov 10 22:16:11 CST 2020
 
 package edu.semo.jatsz.glang;
 
@@ -559,6 +559,7 @@ class Parser implements Tokens {
                 case 96:
                     switch (yytok) {
                         case SEMI:
+                        case RPAREN:
                             yyn = yyr14();
                             continue;
                     }
@@ -910,15 +911,6 @@ class Parser implements Tokens {
                     switch (yytok) {
                         case ID:
                             yyn = 13;
-                            continue;
-                        case DOUBLE:
-                            yyn = 29;
-                            continue;
-                        case LITERAL:
-                            yyn = 30;
-                            continue;
-                        case LPAREN:
-                            yyn = 31;
                             continue;
                     }
                     yyn = 127;
@@ -1396,6 +1388,7 @@ class Parser implements Tokens {
 }
         yysv[yysp-=3] = yyrv;
         switch (yyst[yysp-1]) {
+            case 54: return 56;
             case 22: return 36;
             default: return 3;
         }
@@ -1424,14 +1417,13 @@ class Parser implements Tokens {
 
     private int yypexpr() {
         switch (yyst[yysp-1]) {
-            case 44: return 52;
             case 41: return 49;
             case 38: return 46;
             case 33: return 43;
             case 31: return 42;
             case 18: return 34;
             case 15: return 24;
-            default: return 56;
+            default: return 52;
         }
     }
 
@@ -1456,10 +1448,9 @@ class Parser implements Tokens {
         }
     }
 
-    private int yyr11() { // for : FOR LPAREN assign SEMI expr SEMI expr RPAREN LCURLY statementList RCURLY
+    private int yyr11() { // for : FOR LPAREN assign SEMI expr SEMI assign RPAREN LCURLY statementList RCURLY
         {
-
-    yyrv = new ForStatementNode((AssignmentNode)yysv[yysp-9], (ParseNode)yysv[yysp-7], (ParseNode)yysv[yysp-5], (StatementListNode)yysv[yysp-6]);
+    yyrv = new ForStatementNode((AssignmentNode)yysv[yysp-9], (ParseNode)yysv[yysp-7], (AssignmentNode)yysv[yysp-5], (StatementListNode)yysv[yysp-2]);
 }
         yysv[yysp-=11] = yyrv;
         return 4;
@@ -1526,6 +1517,7 @@ class Parser implements Tokens {
             case 60: return 7;
             case 59: return 7;
             case 55: return 7;
+            case 54: return 7;
             case 53: return 7;
             case 22: return 7;
             case 16: return 32;

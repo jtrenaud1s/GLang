@@ -49,10 +49,9 @@ while: WHILE LPAREN expr RPAREN LCURLY statementList RCURLY
     $$ = new WhileStatementNode((ParseNode)$3, (StatementListNode)$6);
 };
 
-for: FOR LPAREN assign SEMI expr SEMI expr RPAREN LCURLY statementList RCURLY
+for: FOR LPAREN assign SEMI expr SEMI assign RPAREN LCURLY statementList RCURLY
 {
-
-    $$ = new ForStatementNode((AssingmentNode)$3, (ParseNode)$5, (ParseNode)$7, (StatementListNode)$6);
+    $$ = new ForStatementNode((AssignmentNode)$3, (ParseNode)$5, (AssignmentNode)$7, (StatementListNode)$10);
 }
 ;
 
