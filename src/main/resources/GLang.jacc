@@ -5,7 +5,7 @@
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
 %token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY
-%token INT DOUBLE PRINT READ WHILE
+%token INT DOUBLE PRINT READ WHILE FOR
 %right EQUAL
 %left MULTIPLY DIVIDE
 %left POW
@@ -41,12 +41,19 @@ statement: declaration
 | output
 | input
 | while
+| for
 ;
 
 while: WHILE LPAREN expr RPAREN LCURLY statementList RCURLY
 {
     $$ = new WhileStatementNode((ParseNode)$3, (StatementListNode)$6);
 };
+
+for: FOR LPAREN assign SEMI expr SEMI assign RPAREN LCURLY statementList RCURLY
+{
+    $$ = new ForStatementNode((AssignmentNode)$3, (ParseNode)$5, (AssignmentNode)$7, (StatementListNode)$10);
+}
+;
 
 declaration: INT ID
 {

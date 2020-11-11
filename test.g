@@ -1,5 +1,4 @@
-double var;
-var = 4.0;
-print var;
-var = -var;
-print var;
+int i;
+for(i=10;i;i=i-1){
+print -i;
+};
