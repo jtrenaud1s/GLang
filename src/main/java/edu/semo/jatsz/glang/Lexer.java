@@ -123,8 +123,10 @@ public class Lexer implements Tokens {
         }else if(value.equals("while")){
             token=WHILE;
             value = null;
-        }
-        else if (!Character.isDigit(value.toString().toCharArray()[0])) {
+        }else if(value.equals("for")){
+            token = FOR;
+            value = null;
+        } else if (!Character.isDigit(value.toString().toCharArray()[0])) {
             token = ID;
             value = sb.toString();
         } else {
@@ -211,6 +213,10 @@ public class Lexer implements Tokens {
         label[PRINT] = "PRINT";
         label[READ] = "READ";
         label[error] = "error";
+        label[FOR] = "FOR";
+        label[WHILE] = "WHILE";
+        label[LCURLY] = "LCURLY";
+        label[RCURLY] = "RCURLY";
 
         return label[token] + ": " + value;
     }
