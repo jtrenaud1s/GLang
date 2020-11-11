@@ -29,28 +29,24 @@ public class UnaryOperationNode implements ParseNode{
         double rval;
         double result = 0;
 
-
-
-
         if(expression.getType().equals(Type.INT)) {
             rval = (Integer) ((Symbol)expression.evaluate()).getValue();
         } else {
             rval = (Double) ((Symbol)expression.evaluate()).getValue();
         }
 
-
         switch(this.operation) {
             case "-":
-                result = -1 * rval;
+                result = -rval;
                 break;
             default:
                 System.out.println("ERROR DOING MATH");
                 System.exit(-1);
         }
 
-        if(this.getType().equals(Type.DOUBLE))
-            return new Symbol(expression.getType(), "binOpNodeResult", result);
+        if(expression.getType().equals(Type.DOUBLE))
+            return new Symbol(expression.getType(), "unOpNodeResult", result);
         else
-            return new Symbol(expression.getType(), "binOpNodeResult",(int) result);
+            return new Symbol(expression.getType(), "unOpNodeResult",(int) result);
     }
 }
