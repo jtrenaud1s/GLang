@@ -105,9 +105,16 @@ term: term MULTIPLY factor
 | factor
 ;
 
-factor: factor POW group
+factor: factor POW unary
 {
     $$ = new BinaryOperationNode((ParseNode) $1, "^", (ParseNode) $3);
+}
+| unary
+;
+
+unary: SUB group
+{
+    $$ = new UnaryOperationNode("-", (ParseNode) $2 );
 }
 | group
 ;
