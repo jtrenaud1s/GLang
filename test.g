@@ -1,4 +1,7 @@
-int i;
-for(i=10;i;i=i-1){
-print -i;
-};
+string test;
+test = "asdfasdf";
+print test;
+
+char test2;
+test2 = 'A';
+print test2;

@@ -4,7 +4,7 @@
 %next next()
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
-%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY STRING CHAR CHARACTER CHARS DQUOTE QUOTE
 %token INT DOUBLE PRINT READ WHILE FOR
 %right EQUAL
 %left MULTIPLY DIVIDE
@@ -62,6 +62,14 @@ declaration: INT ID
 | DOUBLE ID
 {
     $$ = new DeclarationNode(Type.DOUBLE, (String) $2);
+}
+| STRING ID
+{
+    $$ = new DeclarationNode(Type.STRING, (String) $2);
+}
+| CHARACTER ID
+{
+    $$ = new DeclarationNode(Type.CHAR, (String) $2);
 }
 ;
 
@@ -132,11 +140,25 @@ group: LPAREN expr RPAREN
 {
     $$ = new Symbol(Type.DOUBLE, "double-literal", (Double) $1);
 }
+| string
+| char
 ;
 
 ref: ID
 {
     $$ = new ReferenceNode((String) $1);
+}
+;
+
+string: DQUOTE CHARS DQUOTE
+{
+    $$ = new Symbol(Type.STRING, "string-literal", (String) $2);
+}
+;
+
+char: QUOTE CHAR QUOTE
+{
+    $$ = new Symbol(Type.CHAR, "char-literal", (char) $2);
 }
 ;
 
