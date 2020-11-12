@@ -199,7 +199,7 @@ public class Lexer implements Tokens {
         final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE};
 
         // skip whitespace
-        while (Character.isWhitespace(currentChar) && token != CHARS && token != DQUOTE && token != QUOTE) {
+        while (Character.isWhitespace(currentChar)) {
             nextChar();
         }
 
