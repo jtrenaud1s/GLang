@@ -19,6 +19,8 @@ public class Lexer implements Tokens {
         lineNo = 0;
         colNo = 0;
         currentChar = ' ';
+        inString = false;
+        inChar = false;
         scan = new Scanner(in);
     }
 
@@ -28,6 +30,8 @@ public class Lexer implements Tokens {
     private int colNo;
     private char currentChar;
     private final Scanner scan;
+    private boolean inString;
+    private boolean inChar;
 
     // get the next character
     private void nextChar() {
@@ -73,6 +77,8 @@ public class Lexer implements Tokens {
 
     // Lexer Status
     int token;
+    int lastToken;
+    boolean gotChar = false;
     Object value;
 
     public int getToken() {
@@ -120,11 +126,17 @@ public class Lexer implements Tokens {
         } else if (value.equals("read")) {
             token = READ;
             value = null;
-        }else if(value.equals("while")){
-            token=WHILE;
+        } else if(value.equals("while")){
+            token = WHILE;
             value = null;
-        }else if(value.equals("for")){
+        } else if(value.equals("for")){
             token = FOR;
+            value = null;
+        } else if(value.equals("string")){
+            token = STRING;
+            value = null;
+        } else if(value.equals("char")){
+            token = CHARACTER;
             value = null;
         } else if (!Character.isDigit(value.toString().toCharArray()[0])) {
             token = ID;
@@ -133,6 +145,24 @@ public class Lexer implements Tokens {
             token = error;
         }
 
+    }
+
+    private void string() {
+        StringBuilder sb = new StringBuilder();
+
+        while (currentChar != '"') {
+            sb.append(currentChar);
+            nextChar();
+        }
+
+        value = sb.toString();
+        token = CHARS;
+    }
+
+    private void character() {
+        value = currentChar;
+        token = CHAR;
+        gotChar = true;
     }
 
 
@@ -165,8 +195,8 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}'};
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY};
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\''};
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE};
 
         // skip whitespace
         while (Character.isWhitespace(currentChar)) {
@@ -180,15 +210,46 @@ public class Lexer implements Tokens {
         }
 
         // assume there is an error
+        lastToken = token;
         token = error;
         value = String.valueOf(currentChar);
 
         // match strings
-        if (Character.isLetter(currentChar)) {
+
+        if(inString) {
+            if(currentChar == '"') {
+                inString = false;
+                token = DQUOTE;
+                value = null;
+                nextChar();
+            } else {
+                string();
+            }
+        } else if (inChar) {
+            if(currentChar == '\'') {
+                inChar = false;
+                token = QUOTE;
+                value = null;
+                gotChar = false;
+            } else {
+                if(!gotChar)
+                character();
+                else {
+                    token = error;
+                    value = currentChar;
+                }
+            }
+            nextChar();
+        } else if (Character.isLetter(currentChar)) {
             idOrKw();
         } else if (Character.isDigit(currentChar)) {
             literal();
         } else if (singleMatch(c, ct)) {
+            if(currentChar == '"') {
+                inString = true;
+            } else if(currentChar == '\'') {
+                inChar = true;
+            }
             nextChar();
         } else {
             currentChar = ' ';
@@ -217,6 +278,11 @@ public class Lexer implements Tokens {
         label[WHILE] = "WHILE";
         label[LCURLY] = "LCURLY";
         label[RCURLY] = "RCURLY";
+        label[CHAR] = "CHAR";
+        label[CHARS] = "CHARS";
+        label[STRING] = "STRING";
+        label[QUOTE] = "QUOTE";
+        label[DQUOTE] = "DQUOTE";
 
         return label[token] + ": " + value;
     }

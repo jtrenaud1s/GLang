@@ -17,6 +17,9 @@ public class BinaryOperationNode implements ParseNode{
         } else if(left.getType().equals(Type.DOUBLE) && right.getType().equals(Type.INT)) {
             System.out.println("Invalid Types!");
             System.exit(-1);
+        } else if((left.getType().equals(Type.STRING) && !right.getType().equals(Type.STRING)) || (!left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING))) {
+            System.out.println("Invalid Types!");
+            System.exit(-1);
         }
 
         this.type = left.getType();
@@ -36,48 +39,65 @@ public class BinaryOperationNode implements ParseNode{
 
     @Override
     public ParseNode evaluate() {
-        double lval;
-        double rval;
-        double result = 0;
+        if(left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING)) {
+            String lval = (String)((Symbol)left.evaluate()).getValue();
+            String rval = (String)((Symbol)right.evaluate()).getValue();;
+            String result = "";
 
-        if(left.getType().equals(Type.INT)) {
-            lval = (Integer) ((Symbol)left.evaluate()).getValue();
-        } else {
-            lval = (Double) ((Symbol)left.evaluate()).getValue();
-        }
+            switch(this.operation) {
+                case "+":
+                    result = lval + rval;
+                    break;
+                default:
+                    System.out.println("ERROR DOING MATH");
+                    System.exit(-1);
+            }
 
-
-        if(right.getType().equals(Type.INT)) {
-            rval = (Integer) ((Symbol)right.evaluate()).getValue();
-        } else {
-            rval = (Double) ((Symbol)right.evaluate()).getValue();
-        }
-
-
-        switch(this.operation) {
-            case "+":
-                result = lval + rval;
-                break;
-            case "-":
-                result = lval - rval;
-                break;
-            case "*":
-                result = lval * rval;
-                break;
-            case "/":
-                result = lval / rval;
-                break;
-            case "^":
-                result = Math.pow(lval, rval);
-                break;
-            default:
-                System.out.println("ERROR DOING MATH");
-                System.exit(-1);
-        }
-
-        if(this.getType().equals(Type.DOUBLE))
             return new Symbol(this.type, "binOpNodeResult", result);
-        else
-            return new Symbol(this.type, "binOpNodeResult",(int) result);
+        } else {
+            double lval;
+            double rval;
+            double result = 0;
+
+            if(left.getType().equals(Type.INT)) {
+                lval = (Integer) ((Symbol)left.evaluate()).getValue();
+            } else {
+                lval = (Double) ((Symbol)left.evaluate()).getValue();
+            }
+
+
+            if(right.getType().equals(Type.INT)) {
+                rval = (Integer) ((Symbol)right.evaluate()).getValue();
+            } else {
+                rval = (Double) ((Symbol)right.evaluate()).getValue();
+            }
+
+
+            switch(this.operation) {
+                case "+":
+                    result = lval + rval;
+                    break;
+                case "-":
+                    result = lval - rval;
+                    break;
+                case "*":
+                    result = lval * rval;
+                    break;
+                case "/":
+                    result = lval / rval;
+                    break;
+                case "^":
+                    result = Math.pow(lval, rval);
+                    break;
+                default:
+                    System.out.println("ERROR DOING MATH");
+                    System.exit(-1);
+            }
+
+            if(this.getType().equals(Type.DOUBLE))
+                return new Symbol(this.type, "binOpNodeResult", result);
+            else
+                return new Symbol(this.type, "binOpNodeResult",(int) result);
+        }
     }
 }
