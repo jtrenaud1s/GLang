@@ -1,5 +1,6 @@
 package edu.semo.jatsz.glang.parsenode;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 
@@ -60,5 +61,15 @@ public class Symbol implements ParseNode {
             value = this.value.toString();
         }
         return this.type + " " + this.name + " = " + value;
+    }
+
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return null;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
     }
 }

@@ -1,4 +1,4 @@
-// Output created by jacc on Thu Nov 12 16:44:58 CST 2020
+// Output created by jacc on Thu Nov 12 18:54:10 CST 2020
 
 package edu.semo.jatsz.glang;
 
@@ -2664,6 +2664,7 @@ class Parser implements Tokens {
             Parser parser = new Parser(new java.io.FileInputStream(args[0]));
             parser.next();
             if(parser.parse()) {
+                parser.getEntryPoint().setEnvironment(ParseTree.get());
                 parser.getEntryPoint().evaluate();
             }
         } catch(Exception e) {

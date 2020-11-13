@@ -1,6 +1,7 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
 import edu.semo.jatsz.glang.ParseTree;
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
@@ -34,8 +35,26 @@ public class StdInNode extends StatementNode {
                 ((Symbol)ref.evaluate()).setValue(Double.parseDouble(value));
             } catch (Exception e2) {
                 //System.out.println("Input was not a double!");
+                if(value.length() == 1) {
+                    ((Symbol)ref.evaluate()).setValue(value.toCharArray()[0]);
+                } else {
+                    ((Symbol)ref.evaluate()).setValue(value);
+                }
             }
         }
         return null;
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+        ref.setEnvironment(environment);
     }
 }

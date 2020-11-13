@@ -1,5 +1,6 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
@@ -31,5 +32,18 @@ public class StdOutNode extends StatementNode{
         }
         System.out.println(o.toString());
         return null;
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+        this.output.setEnvironment(this.getEnvironment());
     }
 }
