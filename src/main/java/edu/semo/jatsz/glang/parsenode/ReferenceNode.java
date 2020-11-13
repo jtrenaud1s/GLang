@@ -26,4 +26,8 @@ public class ReferenceNode implements ParseNode {
         return ParseTree.get().getSymbolTable().get(name).evaluate();
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 }

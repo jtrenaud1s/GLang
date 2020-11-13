@@ -3,6 +3,8 @@ package edu.semo.jatsz.glang.parsenode;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 
+import java.util.Arrays;
+
 public class Symbol implements ParseNode {
     private Type type;
     private String name;
@@ -47,5 +49,16 @@ public class Symbol implements ParseNode {
     public void set(Symbol s) {
         this.type = s.type;
         this.value = s.value;
+    }
+
+    @Override
+    public String toString() {
+        String value = "";
+        if(this.value == null) {
+            value = "null";
+        } else {
+            value = this.value.toString();
+        }
+        return this.type + " " + this.name + " = " + value;
     }
 }

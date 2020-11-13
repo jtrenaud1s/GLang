@@ -41,7 +41,7 @@ public class BinaryOperationNode implements ParseNode{
     public ParseNode evaluate() {
         if(left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING)) {
             String lval = (String)((Symbol)left.evaluate()).getValue();
-            String rval = (String)((Symbol)right.evaluate()).getValue();;
+            String rval = (String)((Symbol)right.evaluate()).getValue();
             String result = "";
 
             switch(this.operation) {

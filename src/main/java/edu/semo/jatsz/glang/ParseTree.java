@@ -2,6 +2,7 @@ package edu.semo.jatsz.glang;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
+import edu.semo.jatsz.glang.parsenode.Symbol;
 
 import java.util.Scanner;
 
@@ -24,6 +25,16 @@ public class ParseTree implements SymbolStorage {
     @Override
     public SymbolTable getSymbolTable() {
         return this.global;
+    }
+
+    @Override
+    public Symbol get(String name) {
+        return global.get(name);
+    }
+
+    @Override
+    public void set(String name, Symbol sym) {
+        global.set(name, sym);
     }
 
     public static ParseTree get() {
