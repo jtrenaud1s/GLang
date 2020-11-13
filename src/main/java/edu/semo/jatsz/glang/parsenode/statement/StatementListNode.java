@@ -68,7 +68,7 @@ public class StatementListNode implements ParseNode, SymbolStorage {
         if(this.table.containsSymbol(name))
             return this.table.get(name);
         else
-            return this.getEnvironment().get(name);
+            return this.environment.get(name);
     }
 
     @Override

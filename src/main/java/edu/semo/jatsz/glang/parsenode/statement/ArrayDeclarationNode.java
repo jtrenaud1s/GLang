@@ -46,13 +46,13 @@ public class ArrayDeclarationNode extends DeclarationNode {
     private SymbolStorage environment;
     public void setEnvironment(SymbolStorage env) {
         this.environment = env;
-        int outerlength = (int)((Symbol)this.length.evaluate()).getValue();
+        int outerlength = (int) ((Symbol) this.length.evaluate()).getValue();
 
-        if(multiDimensional) {
-            generateInnerArrays((int)((Symbol)this.innerLength.evaluate()).getValue());
+        if (multiDimensional) {
+            generateInnerArrays((int) ((Symbol) this.innerLength.evaluate()).getValue());
         } else {
             Symbol[] s = new Symbol[outerlength];
-            for(int i = 0; i < outerlength; i++) {
+            for (int i = 0; i < outerlength; i++) {
                 s[i] = new Symbol(type, name + "[" + i + "]", null);
             }
             environment.set(name, new ArraySymbol(type, name, s, outerlength));

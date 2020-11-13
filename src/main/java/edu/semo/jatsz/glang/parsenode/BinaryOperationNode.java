@@ -104,7 +104,6 @@ public class BinaryOperationNode implements ParseNode{
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
 
-
         left.setEnvironment(this.environment);
         right.setEnvironment(this.environment);
 

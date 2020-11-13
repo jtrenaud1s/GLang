@@ -44,6 +44,6 @@ public class StdOutNode extends StatementNode{
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        this.output.setEnvironment(this.getEnvironment());
+        this.output.setEnvironment(this.environment);
     }
 }

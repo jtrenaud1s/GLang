@@ -1,6 +1,5 @@
 package edu.semo.jatsz.glang.parsenode;
 
-import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 
 public class ReferenceNode implements ParseNode {

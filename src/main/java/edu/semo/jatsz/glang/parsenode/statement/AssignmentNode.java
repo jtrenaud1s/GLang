@@ -19,6 +19,7 @@ public class AssignmentNode extends StatementNode {
         this.type = referenceNode.getType();
         this.ref = referenceNode;
         this.expression = parseNode;
+        this.decl = null;
     }
 
     public AssignmentNode(DeclarationNode declarationNode, ParseNode parseNode) {
@@ -26,6 +27,7 @@ public class AssignmentNode extends StatementNode {
         this.type = declarationNode.getType();
         this.decl = declarationNode;
         this.expression = parseNode;
+        this.ref = null;
     }
 
     @Override
@@ -41,7 +43,6 @@ public class AssignmentNode extends StatementNode {
 
     @Override
     public ParseNode evaluate() {
-
         Symbol s = (Symbol) ref.evaluate();
         Symbol n = (Symbol) expression.evaluate();
 
@@ -68,8 +69,9 @@ public class AssignmentNode extends StatementNode {
         if(decl != null) {
             decl.setEnvironment(this.environment);
             ref = (ReferenceNode) decl.evaluate();
-        }
+        } else {
             ref.setEnvironment(this.environment);
+        }
 
         expression.setEnvironment(this.environment);
 
