@@ -1,5 +1,7 @@
 package edu.semo.jatsz.glang.parsenode;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
+
 public class UnaryOperationNode implements ParseNode{
     private String operation;
     private ParseNode expression;
@@ -48,5 +50,19 @@ public class UnaryOperationNode implements ParseNode{
             return new Symbol(Type.DOUBLE, "unOpNodeResult", result);
         else
             return new Symbol(Type.INT, "unOpNodeResult",(int) result);
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+
+        expression.setEnvironment(this.getEnvironment());
     }
 }

@@ -1,5 +1,7 @@
 package edu.semo.jatsz.glang.parsenode;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
+
 public class BinaryOperationNode implements ParseNode{
     private ParseNode left;
     private ParseNode right;
@@ -11,18 +13,8 @@ public class BinaryOperationNode implements ParseNode{
         this.operation = operation;
         this.right = right;
 
-        if(left.getType().equals(Type.INT) && right.getType().equals(Type.DOUBLE)) {
-            System.out.println("Invalid Types!");
-            System.exit(-1);
-        } else if(left.getType().equals(Type.DOUBLE) && right.getType().equals(Type.INT)) {
-            System.out.println("Invalid Types!");
-            System.exit(-1);
-        } else if((left.getType().equals(Type.STRING) && !right.getType().equals(Type.STRING)) || (!left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING))) {
-            System.out.println("Invalid Types!");
-            System.exit(-1);
-        }
 
-        this.type = left.getType();
+
     }
 
     @Override
@@ -99,5 +91,34 @@ public class BinaryOperationNode implements ParseNode{
             else
                 return new Symbol(this.type, "binOpNodeResult",(int) result);
         }
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+
+
+        left.setEnvironment(this.environment);
+        right.setEnvironment(this.environment);
+
+        if(left.getType().equals(Type.INT) && right.getType().equals(Type.DOUBLE)) {
+            System.out.println("Invalid Types!");
+            System.exit(-1);
+        } else if(left.getType().equals(Type.DOUBLE) && right.getType().equals(Type.INT)) {
+            System.out.println("Invalid Types!");
+            System.exit(-1);
+        } else if((left.getType().equals(Type.STRING) && !right.getType().equals(Type.STRING)) || (!left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING))) {
+            System.out.println("Invalid Types!");
+            System.exit(-1);
+        }
+
+        this.type = left.getType();
     }
 }

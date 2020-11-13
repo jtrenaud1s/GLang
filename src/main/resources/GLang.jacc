@@ -233,6 +233,7 @@ char: QUOTE CHAR QUOTE
             Parser parser = new Parser(new java.io.FileInputStream(args[0]));
             parser.next();
             if(parser.parse()) {
+                parser.getEntryPoint().setEnvironment(ParseTree.get());
                 parser.getEntryPoint().evaluate();
             }
         } catch(Exception e) {

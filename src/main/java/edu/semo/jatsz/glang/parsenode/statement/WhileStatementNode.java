@@ -1,19 +1,18 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-import javax.sql.StatementEventListener;
-
 public class WhileStatementNode extends StatementNode{
 
     private ParseNode condition;
-    private StatementListNode statement;
+    private StatementListNode statements;
 
-    public WhileStatementNode(ParseNode condition, StatementListNode statement) {
+    public WhileStatementNode(ParseNode condition, StatementListNode statements) {
         this.condition = condition;
-        this.statement = statement;
+        this.statements = statements;
     }
 
     @Override
@@ -28,9 +27,26 @@ public class WhileStatementNode extends StatementNode{
 
     @Override
     public ParseNode evaluate() {
+
         while ((int)((Symbol)condition.evaluate()).getValue() !=0){
-            statement.evaluate();
+            statements.evaluate();
         }
         return null;
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+        statements.setEnvironment(this.environment);
+
+        condition.setEnvironment(statements);
+
     }
 }

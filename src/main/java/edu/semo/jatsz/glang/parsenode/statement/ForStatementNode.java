@@ -1,5 +1,6 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
@@ -17,6 +18,7 @@ public class ForStatementNode extends StatementNode {
         this.condition = condition;
         this.statement = statement;
         this.increment = increment;
+
     }
 
     @Override
@@ -37,6 +39,23 @@ public class ForStatementNode extends StatementNode {
             increment.evaluate();
         }
         return null;
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+        statement.setEnvironment(this.environment);
+
+        assign.setEnvironment(statement);
+        increment.setEnvironment(statement);
+        condition.setEnvironment(statement);
     }
 }
 

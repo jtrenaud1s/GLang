@@ -1,6 +1,7 @@
 package edu.semo.jatsz.glang.parsenode;
 
 import edu.semo.jatsz.glang.ParseTree;
+import edu.semo.jatsz.glang.model.SymbolStorage;
 
 public class ReferenceNode implements ParseNode {
     private Type type;
@@ -8,7 +9,6 @@ public class ReferenceNode implements ParseNode {
 
     public ReferenceNode(String name) {
         this.name = name;
-        this.type = ParseTree.get().getSymbolTable().get(name).getType();
     }
 
     @Override
@@ -23,11 +23,25 @@ public class ReferenceNode implements ParseNode {
 
     @Override
     public ParseNode evaluate() {
-        return ParseTree.get().getSymbolTable().get(name).evaluate();
+        return getEnvironment().get(name).evaluate();
     }
 
     public String getName() {
         return this.name;
+    }
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+        this.type = this.environment.get(name).getType();
+
     }
 
 }

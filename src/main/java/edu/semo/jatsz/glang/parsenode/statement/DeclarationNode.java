@@ -1,6 +1,7 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
 import edu.semo.jatsz.glang.ParseTree;
+import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
@@ -13,7 +14,6 @@ public class DeclarationNode extends StatementNode {
     public DeclarationNode(Type type, String name) {
         this.type = type;
         this.name = name;
-        ParseTree.get().getSymbolTable().set(name, new Symbol(this.type, name, null));
     }
 
     @Override
@@ -28,11 +28,29 @@ public class DeclarationNode extends StatementNode {
 
     @Override
     public ParseNode evaluate() {
-        ParseTree.get().getSymbolTable().set(name, new Symbol(this.type, name, null));
-        return new ReferenceNode(name);
+        this.getEnvironment().set(name, new Symbol(this.type, name, null));
+        ReferenceNode ref = new ReferenceNode(name);
+        ref.setEnvironment(this.getEnvironment());
+        return ref;
     }
 
     public String getName() {
         return name;
+    }
+
+
+    private SymbolStorage environment;
+
+    @Override
+    public SymbolStorage getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void setEnvironment(SymbolStorage environment) {
+        this.environment = environment;
+
+        this.getEnvironment().set(name, new Symbol(this.type, name, null));
+
     }
 }

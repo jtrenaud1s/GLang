@@ -18,17 +18,16 @@ public class ParseTree implements SymbolStorage {
     }
 
     @Override
-    public SymbolStorage getParent() {
-        return null;
-    }
-
-    @Override
     public SymbolTable getSymbolTable() {
         return this.global;
     }
 
     @Override
     public Symbol get(String name) {
+        if(global.get(name) == null) {
+            System.out.println("Symbol " + name + " not found!");
+            System.exit(-1);
+        }
         return global.get(name);
     }
 
