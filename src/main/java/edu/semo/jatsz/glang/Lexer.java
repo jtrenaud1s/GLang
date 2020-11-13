@@ -195,8 +195,8 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\''};
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE};
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\'', '[', ']'};
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE, LSQUARE, RSQUARE};
 
         // skip whitespace
         while (Character.isWhitespace(currentChar)) {
@@ -283,6 +283,8 @@ public class Lexer implements Tokens {
         label[STRING] = "STRING";
         label[QUOTE] = "QUOTE";
         label[DQUOTE] = "DQUOTE";
+        label[LSQUARE] = "LSQUARE";
+        label[RSQUARE] = "RSQUARE";
 
         return label[token] + ": " + value;
     }

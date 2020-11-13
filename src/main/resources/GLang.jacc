@@ -4,7 +4,7 @@
 %next next()
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
-%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY STRING CHAR CHARACTER CHARS DQUOTE QUOTE
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY LSQUARE RSQUARE STRING CHAR CHARACTER CHARS DQUOTE QUOTE
 %token INT DOUBLE PRINT READ WHILE FOR
 %right EQUAL
 %left MULTIPLY DIVIDE
@@ -70,6 +70,30 @@ declaration: INT ID
 | CHARACTER ID
 {
     $$ = new DeclarationNode(Type.CHAR, (String) $2);
+}
+| arrayDeclaration
+;
+
+arrayDeclaration: INT ID LSQUARE expr RSQUARE
+{
+    $$ = new ArrayDeclarationNode(Type.INT, (String) $2, (ParseNode) $4);
+}
+| DOUBLE ID LSQUARE expr RSQUARE
+{
+    $$ = new ArrayDeclarationNode(Type.DOUBLE, (String) $2, (ParseNode) $4);
+}
+| STRING ID LSQUARE expr RSQUARE
+{
+    $$ = new ArrayDeclarationNode(Type.STRING, (String) $2, (ParseNode) $4);
+}
+| CHARACTER ID LSQUARE expr RSQUARE
+{
+    $$ = new ArrayDeclarationNode(Type.CHAR, (String) $2, (ParseNode) $4);
+}
+| arrayDeclaration LSQUARE expr RSQUARE
+{
+    ((ArrayDeclarationNode)$1).setMulti(true, (ParseNode)$3);
+    $$ = $1;
 }
 ;
 
@@ -147,6 +171,10 @@ group: LPAREN expr RPAREN
 ref: ID
 {
     $$ = new ReferenceNode((String) $1);
+}
+| ref LSQUARE expr RSQUARE
+{
+    $$ = new ArrayReferenceNode((ReferenceNode) $1, (ParseNode) $3);
 }
 ;
 

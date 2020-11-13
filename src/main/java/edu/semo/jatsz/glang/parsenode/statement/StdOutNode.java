@@ -4,6 +4,9 @@ import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class StdOutNode extends StatementNode{
     private ParseNode output;
     public StdOutNode(ParseNode output) {
@@ -22,7 +25,11 @@ public class StdOutNode extends StatementNode{
 
     @Override
     public ParseNode evaluate() {
-        System.out.println(((Symbol)output.evaluate()).getValue());
+        Object o = ((Symbol)output.evaluate()).getValue();
+        if(o.getClass().isArray()) {
+            System.out.println(Arrays.toString((Object[]) o));
+        }
+        System.out.println(o.toString());
         return null;
     }
 }

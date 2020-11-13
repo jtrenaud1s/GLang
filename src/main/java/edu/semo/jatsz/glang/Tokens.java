@@ -1,4 +1,4 @@
-// Output created by jacc on Thu Nov 12 13:28:54 CST 2020
+// Output created by jacc on Thu Nov 12 16:44:58 CST 2020
 
 package edu.semo.jatsz.glang;
 
@@ -20,16 +20,18 @@ interface Tokens {
     int LCURLY = 14;
     int LITERAL = 15;
     int LPAREN = 16;
-    int MULTIPLY = 17;
-    int POW = 18;
-    int PRINT = 19;
-    int QUOTE = 20;
-    int RCURLY = 21;
-    int READ = 22;
-    int RPAREN = 23;
-    int SEMI = 24;
-    int STRING = 25;
-    int SUB = 26;
-    int WHILE = 27;
-    int error = 28;
+    int LSQUARE = 17;
+    int MULTIPLY = 18;
+    int POW = 19;
+    int PRINT = 20;
+    int QUOTE = 21;
+    int RCURLY = 22;
+    int READ = 23;
+    int RPAREN = 24;
+    int RSQUARE = 25;
+    int SEMI = 26;
+    int STRING = 27;
+    int SUB = 28;
+    int WHILE = 29;
+    int error = 30;
 }

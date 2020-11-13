@@ -15,7 +15,7 @@ public class UnaryOperationNode implements ParseNode{
 
     @Override
     public Type getType() {
-        return Type.NULL;
+        return expression.getType();
     }
 
     @Override
@@ -40,13 +40,13 @@ public class UnaryOperationNode implements ParseNode{
                 result = -rval;
                 break;
             default:
-                System.out.println("ERROR DOING MATH");
+                System.out.println("ERROR NEGATING");
                 System.exit(-1);
         }
 
         if(expression.getType().equals(Type.DOUBLE))
-            return new Symbol(expression.getType(), "unOpNodeResult", result);
+            return new Symbol(Type.DOUBLE, "unOpNodeResult", result);
         else
-            return new Symbol(expression.getType(), "unOpNodeResult",(int) result);
+            return new Symbol(Type.INT, "unOpNodeResult",(int) result);
     }
 }
