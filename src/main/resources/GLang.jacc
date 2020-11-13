@@ -101,6 +101,10 @@ assign: ref EQUAL expr
 {
     $$ = new AssignmentNode((ReferenceNode)$1, (ParseNode)$3);
 }
+| declaration EQUAL expr
+{
+    $$ = new AssignmentNode((DeclarationNode)$1, (ParseNode)$3);
+}
 ;
 
 output: PRINT expr

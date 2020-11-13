@@ -50,7 +50,7 @@ public class DeclarationNode extends StatementNode {
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
 
-        this.getEnvironment().set(name, new Symbol(this.type, name, null));
+        this.environment.set(name, new Symbol(this.type, name, null));
 
     }
 }
