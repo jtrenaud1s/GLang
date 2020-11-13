@@ -10,6 +10,7 @@ public class AssignmentNode extends StatementNode {
     private Type type;
     private ReferenceNode ref;
     private ParseNode expression;
+    private DeclarationNode decl;
 
 
 
@@ -18,8 +19,13 @@ public class AssignmentNode extends StatementNode {
         this.type = referenceNode.getType();
         this.ref = referenceNode;
         this.expression = parseNode;
+    }
 
-
+    public AssignmentNode(DeclarationNode declarationNode, ParseNode parseNode) {
+        super();
+        this.type = declarationNode.getType();
+        this.decl = declarationNode;
+        this.expression = parseNode;
     }
 
     @Override
@@ -59,7 +65,11 @@ public class AssignmentNode extends StatementNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        ref.setEnvironment(this.environment);
+        if(decl != null) {
+            decl.setEnvironment(this.environment);
+            ref = (ReferenceNode) decl.evaluate();
+        }
+            ref.setEnvironment(this.environment);
 
         expression.setEnvironment(this.environment);
 

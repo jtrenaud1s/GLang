@@ -1,6 +1,9 @@
 int i;
 int j;
 
+int f = 5;
+print f;
+
 int a[3][3];
 
 for(i = 3; i; i = i - 1) {
