@@ -51,14 +51,14 @@ public class BinaryOperationNode implements ParseNode{
             double rval;
             double result = 0;
 
-            if(left.getType().equals(Type.INT)) {
+            if(left.evaluate().getType().equals(Type.INT)) {
                 lval = (Integer) ((Symbol)left.evaluate()).getValue();
             } else {
                 lval = (Double) ((Symbol)left.evaluate()).getValue();
             }
 
 
-            if(right.getType().equals(Type.INT)) {
+            if(right.evaluate().getType().equals(Type.INT)) {
                 rval = (Integer) ((Symbol)right.evaluate()).getValue();
             } else {
                 rval = (Double) ((Symbol)right.evaluate()).getValue();
@@ -103,7 +103,6 @@ public class BinaryOperationNode implements ParseNode{
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-
 
         left.setEnvironment(this.environment);
         right.setEnvironment(this.environment);

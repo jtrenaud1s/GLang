@@ -118,25 +118,30 @@ public class Lexer implements Tokens {
 
         if (value.equals("int")) {
             token = INT;
+            value = null;
         } else if (value.equals("double")) {
             token = DOUBLE;
+            value = null;
         } else if (value.equals("print")) {
             token = PRINT;
             value = null;
         } else if (value.equals("read")) {
             token = READ;
             value = null;
-        } else if(value.equals("while")){
+        } else if (value.equals("while")) {
             token = WHILE;
             value = null;
-        } else if(value.equals("for")){
+        } else if (value.equals("for")) {
             token = FOR;
             value = null;
-        } else if(value.equals("string")){
+        } else if (value.equals("string")) {
             token = STRING;
             value = null;
-        } else if(value.equals("char")){
+        } else if (value.equals("char")) {
             token = CHARACTER;
+            value = null;
+        } else if (value.equals("class")) {
+            token = CLASS;
             value = null;
         } else if (!Character.isDigit(value.toString().toCharArray()[0])) {
             token = ID;
@@ -195,8 +200,8 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\'', '[', ']'};
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE, LSQUARE, RSQUARE};
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\'', '[', ']', '.'};
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE, LSQUARE, RSQUARE, DOT};
 
         // skip whitespace
         while (Character.isWhitespace(currentChar)) {
@@ -285,6 +290,8 @@ public class Lexer implements Tokens {
         label[DQUOTE] = "DQUOTE";
         label[LSQUARE] = "LSQUARE";
         label[RSQUARE] = "RSQUARE";
+        label[DOT] = "DOT";
+        label[CLASS] = "CLASS";
 
         return label[token] + ": " + value;
     }

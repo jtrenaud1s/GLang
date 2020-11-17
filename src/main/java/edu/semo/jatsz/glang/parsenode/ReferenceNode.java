@@ -1,6 +1,5 @@
 package edu.semo.jatsz.glang.parsenode;
 
-import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 
 public class ReferenceNode implements ParseNode {
@@ -18,12 +17,12 @@ public class ReferenceNode implements ParseNode {
 
     @Override
     public void print(String prefix) {
-        System.out.println("\t" + name);
+        System.out.println(prefix + name);
     }
 
     @Override
     public ParseNode evaluate() {
-        return getEnvironment().get(name).evaluate();
+        return this.environment.get(name).evaluate();
     }
 
     public String getName() {

@@ -1,20 +1,26 @@
-int i;
-int j;
-
-int f = 5;
-print f;
-
-int a[3][3];
-
-for(i = 3; i; i = i - 1) {
-    for(j = 3; j; j = j - 1) {
-        a[i-1][j-1] = i * j;
-    };
+class Address {
+    string street;
+    string city;
+    string state;
+    int zip;
 };
 
-
-for(i = 3; i; i = i - 1) {
-    for(j = 3; j; j = j - 1) {
-        print a[i-1][j-1];
-    };
+class Person {
+    Address address;
+    string name;
+    int age;
 };
+
+Address a;
+a.street = "1969 The Woods Circle";
+a.city = "Barnhart";
+a.state = "MO";
+a.zip = 63012;
+
+Person jordan;
+jordan.address = a;
+jordan.name = "Jordan Renaud";
+jordan.age = 22;
+
+print jordan;
+

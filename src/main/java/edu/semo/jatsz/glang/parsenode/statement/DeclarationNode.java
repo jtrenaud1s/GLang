@@ -49,8 +49,6 @@ public class DeclarationNode extends StatementNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-
         this.environment.set(name, new Symbol(this.type, name, null));
-
     }
 }

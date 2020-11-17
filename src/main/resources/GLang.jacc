@@ -4,15 +4,19 @@
 %next next()
 %get lexer.getToken()
 %semantic Object : lexer.getValue()
-%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL ALPHA ALPHANUM LCURLY RCURLY LSQUARE RSQUARE STRING CHAR CHARACTER CHARS DQUOTE QUOTE
-%token INT DOUBLE PRINT READ WHILE FOR
+//Symbol Tokens
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL LCURLY RCURLY LSQUARE RSQUARE CHAR CHARS DQUOTE QUOTE
+//Keyword and Type tokens
+%token INT DOUBLE PRINT READ WHILE FOR CLASS CHARACTER STRING CLASS
 %right EQUAL
 %left MULTIPLY DIVIDE
 %left POW
+%left DOT
 
 
 %{
 import edu.semo.jatsz.glang.parsenode.*;
+import edu.semo.jatsz.glang.parsenode.classnode.*;
 import edu.semo.jatsz.glang.parsenode.statement.*;
 import edu.semo.jatsz.glang.model.*;
 %}
@@ -42,6 +46,29 @@ statement: declaration
 | input
 | while
 | for
+| class_definition
+;
+
+class_definition: CLASS ID LCURLY declaration_list RCURLY
+{
+    $$ = new ClassDefinitionNode((String) $2.toString(), (SymbolTable) $4);
+}
+;
+
+class_declaration: ID ID
+{
+    $$ = new ClassDeclarationNode((String) $1, (String) $2);
+}
+;
+
+declaration_list: declaration_list declaration SEMI
+{
+    $$ = addDeclaration($1, $2);
+}
+| declaration SEMI
+{
+    $$ = addDeclaration(null, $1);
+}
 ;
 
 while: WHILE LPAREN expr RPAREN LCURLY statementList RCURLY
@@ -72,6 +99,7 @@ declaration: INT ID
     $$ = new DeclarationNode(Type.CHAR, (String) $2);
 }
 | arrayDeclaration
+| class_declaration
 ;
 
 arrayDeclaration: INT ID LSQUARE expr RSQUARE
@@ -180,6 +208,10 @@ ref: ID
 {
     $$ = new ArrayReferenceNode((ReferenceNode) $1, (ParseNode) $3);
 }
+| ref DOT ref
+{
+    $$ = new FieldReferenceNode((ReferenceNode) $1, (ReferenceNode) $3);
+}
 ;
 
 string: DQUOTE CHARS DQUOTE
@@ -211,14 +243,18 @@ char: QUOTE CHAR QUOTE
         return entryPoint;
     }
 
-    /*SymbolTable addDeclaration(Object sym, Object decl) {
+    SymbolTable addDeclaration(Object sym, Object decl) {
         if(sym == null)
             sym = new SymbolTable();
         SymbolTable table = (SymbolTable)sym;
         DeclarationNode declaration = (DeclarationNode)decl;
-        table.set(declaration.getName(), new Symbol(declaration.getType(), "declaration", null));
+        if(declaration instanceof ArrayDeclarationNode) {
+            table.set(declaration.getName(), new Symbol(declaration.getType(), declaration.getName(), declaration));
+        } else {
+            table.set(declaration.getName(), new Symbol(declaration.getType(), declaration.getName(), null));
+        }
         return table;
-    }*/
+    }
 
 
     public int next() {

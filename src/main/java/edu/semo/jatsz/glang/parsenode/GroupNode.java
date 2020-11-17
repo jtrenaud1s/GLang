@@ -9,7 +9,6 @@ public class GroupNode implements ParseNode{
     public GroupNode(ParseNode expression) {
         this.expression = expression;
         this.type = expression.getType();
-        System.out.println("In group: " + expression.getType());
     }
 
     @Override

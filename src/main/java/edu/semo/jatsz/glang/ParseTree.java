@@ -26,9 +26,14 @@ public class ParseTree implements SymbolStorage {
     public Symbol get(String name) {
         if(global.get(name) == null) {
             System.out.println("Symbol " + name + " not found!");
-            System.exit(-1);
+            //System.exit(-1);
         }
         return global.get(name);
+    }
+
+    @Override
+    public boolean has(String name) {
+        return this.getSymbolTable().containsSymbol(name);
     }
 
     @Override
