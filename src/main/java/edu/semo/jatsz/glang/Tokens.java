@@ -1,5 +1,3 @@
-// Output created by jacc on Mon Nov 16 22:30:54 CST 2020
-
 package edu.semo.jatsz.glang;
 
 interface Tokens {
