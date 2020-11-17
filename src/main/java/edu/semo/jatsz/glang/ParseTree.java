@@ -32,6 +32,11 @@ public class ParseTree implements SymbolStorage {
     }
 
     @Override
+    public boolean has(String name) {
+        return this.getSymbolTable().containsSymbol(name);
+    }
+
+    @Override
     public void set(String name, Symbol sym) {
         global.set(name, sym);
     }

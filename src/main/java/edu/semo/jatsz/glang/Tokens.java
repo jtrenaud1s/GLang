@@ -1,16 +1,16 @@
-// Output created by jacc on Thu Nov 12 20:32:14 CST 2020
+// Output created by jacc on Mon Nov 16 22:30:54 CST 2020
 
 package edu.semo.jatsz.glang;
 
 interface Tokens {
     int ENDINPUT = 0;
     int ADD = 1;
-    int ALPHA = 2;
-    int ALPHANUM = 3;
-    int CHAR = 4;
-    int CHARACTER = 5;
-    int CHARS = 6;
-    int DIVIDE = 7;
+    int CHAR = 2;
+    int CHARACTER = 3;
+    int CHARS = 4;
+    int CLASS = 5;
+    int DIVIDE = 6;
+    int DOT = 7;
     int DOUBLE = 8;
     int DQUOTE = 9;
     int EQUAL = 10;

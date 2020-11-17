@@ -17,12 +17,12 @@ public class ReferenceNode implements ParseNode {
 
     @Override
     public void print(String prefix) {
-        System.out.println("\t" + name);
+        System.out.println(prefix + name);
     }
 
     @Override
     public ParseNode evaluate() {
-        return getEnvironment().get(name).evaluate();
+        return this.environment.get(name).evaluate();
     }
 
     public String getName() {

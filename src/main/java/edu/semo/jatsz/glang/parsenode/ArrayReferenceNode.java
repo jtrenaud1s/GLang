@@ -16,17 +16,21 @@ public class ArrayReferenceNode extends ReferenceNode {
 
     @Override
     public ParseNode evaluate() {
-        index.setEnvironment(this.getEnvironment());
-        ref.setEnvironment(this.getEnvironment());
-
         int index = (int)((Symbol)this.index.evaluate()).getValue();
         Symbol array = (Symbol)ref.evaluate();
 
         if(array instanceof ArraySymbol) {
             return ((ArraySymbol) array.evaluate()).get(index);
         } else {
-            return array.evaluate();
+            System.out.println("Symbol is not an array: " + ref.getName());
+            System.exit(-1);
         }
+        return array.evaluate();
+    }
+
+    @Override
+    public void print(String prefix) {
+        System.out.println(prefix + "Array Reference " + this.getName() + "");
     }
 
     @Override

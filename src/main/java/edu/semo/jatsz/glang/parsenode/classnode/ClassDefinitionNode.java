@@ -1,47 +1,38 @@
-package edu.semo.jatsz.glang.parsenode.statement;
+package edu.semo.jatsz.glang.parsenode.classnode;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
+import edu.semo.jatsz.glang.parsenode.statement.StatementNode;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ClassDefinitionNode extends StatementNode implements SymbolStorage {
+    private final String name;
+    private final SymbolTable table;
+    private SymbolStorage environment;
 
-public class StatementListNode implements ParseNode, SymbolStorage {
-    private List<StatementNode> statements;
-
-    public StatementListNode(StatementNode statement) {
-        this.statements = new ArrayList<>();
-        this.statements.add(statement);
-        this.table = new SymbolTable();
-
-    }
-
-    public void add(StatementNode statement) {
-        this.statements.add(statement);
+    public ClassDefinitionNode(String name, SymbolTable table) {
+        this.name = name;
+        this.table = table;
     }
 
     @Override
     public Type getType() {
-        return Type.NULL;
+        return Type.CLASS_DEF;
     }
 
     @Override
     public void print(String prefix) {
-
+        System.out.println(prefix + " Class Definition " + name);
+        table.print();
     }
 
     @Override
     public ParseNode evaluate() {
-        for(StatementNode statement : statements) {
-            statement.evaluate();
-        }
-        return null;
+        this.environment.set(name, new Symbol(Type.CLASS_DEF, this.name, this));
+        return this;
     }
-
-    private SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {
@@ -51,12 +42,15 @@ public class StatementListNode implements ParseNode, SymbolStorage {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        for(StatementNode n : statements) {
-            n.setEnvironment(this);
-        }
+
+        this.environment.set(name, new Symbol(Type.CLASS_DEF, this.name, this));
+        this.table.setSymbolEnvironments(this);
+
     }
 
-    private SymbolTable table;
+    public String getName() {
+        return name;
+    }
 
     @Override
     public SymbolTable getSymbolTable() {
