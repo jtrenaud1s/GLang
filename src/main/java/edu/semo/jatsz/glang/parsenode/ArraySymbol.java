@@ -1,8 +1,10 @@
 package edu.semo.jatsz.glang.parsenode;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.util.Arrays;
 
-public class ArraySymbol extends Symbol {
+public class ArraySymbol extends Symbol implements Cloneable {
     private int length;
     private Type type;
     private String name;
@@ -35,6 +37,6 @@ public class ArraySymbol extends Symbol {
                 value = this.value.toString();
             }
         }
-        return this.type + " " + this.name + "[" + this.length + "] = " + value ;
+        return value ;
     }
 }

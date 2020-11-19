@@ -52,7 +52,7 @@ public class UnaryOperationNode implements ParseNode{
             return new Symbol(Type.INT, "unOpNodeResult",(int) result);
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

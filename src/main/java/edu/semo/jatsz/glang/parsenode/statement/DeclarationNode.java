@@ -7,9 +7,12 @@ import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-public class DeclarationNode extends StatementNode {
+import java.io.Serializable;
+
+public class DeclarationNode extends StatementNode implements Serializable {
     private Type type;
     private String name;
+    public static final long serialVersionUID = 1;
 
     public DeclarationNode(Type type, String name) {
         this.type = type;
@@ -39,7 +42,7 @@ public class DeclarationNode extends StatementNode {
     }
 
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

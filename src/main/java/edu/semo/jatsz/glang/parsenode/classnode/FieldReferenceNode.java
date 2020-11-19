@@ -4,7 +4,7 @@ import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.*;
 
 public class FieldReferenceNode extends ReferenceNode {
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
     private ReferenceNode field;
     private ReferenceNode classRef;
     private Type type;
@@ -21,7 +21,7 @@ public class FieldReferenceNode extends ReferenceNode {
     }
 
     public void print(String prefix) {
-        System.out.println(((ClassDeclarationNode)field.getEnvironment()).getName() + "." + field.getName() + "::" + field.getClass().getName());
+        System.out.println(field.getEnvironment().getName() + "." + field.getName() + "::" + field.getClass().getName());
     }
 
     @Override

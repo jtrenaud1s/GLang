@@ -26,7 +26,7 @@ public class GroupNode implements ParseNode{
         return expression.evaluate();
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

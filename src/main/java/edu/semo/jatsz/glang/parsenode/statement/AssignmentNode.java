@@ -6,12 +6,15 @@ import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-public class AssignmentNode extends StatementNode {
+import java.io.Serializable;
+
+public class AssignmentNode extends StatementNode implements Serializable {
     private Type type;
     private ReferenceNode ref;
     private ParseNode expression;
     private DeclarationNode decl;
 
+    public static final long serialVersionUID = 1;
 
 
     public AssignmentNode(ReferenceNode referenceNode, ParseNode parseNode) {
@@ -56,7 +59,7 @@ public class AssignmentNode extends StatementNode {
         return null;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

@@ -31,9 +31,9 @@ public class BinaryOperationNode implements ParseNode{
 
     @Override
     public ParseNode evaluate() {
-        if(left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING)) {
-            String lval = (String)((Symbol)left.evaluate()).getValue();
-            String rval = (String)((Symbol)right.evaluate()).getValue();
+        if(left.getType().equals(Type.STRING) || right.getType().equals(Type.STRING)) {
+            String lval = ((Symbol)left.evaluate()).getValue().toString();
+            String rval = ((Symbol)right.evaluate()).getValue().toString();
             String result = "";
 
             switch(this.operation) {
@@ -45,7 +45,7 @@ public class BinaryOperationNode implements ParseNode{
                     System.exit(-1);
             }
 
-            return new Symbol(this.type, "binOpNodeResult", result);
+            return new Symbol(this.type, "concatenationResult", result);
         } else {
             double lval;
             double rval;
@@ -81,6 +81,24 @@ public class BinaryOperationNode implements ParseNode{
                 case "^":
                     result = Math.pow(lval, rval);
                     break;
+                case "<":
+                    result = lval < rval ? 1 : 0;
+                    break;
+                case ">":
+                    result = lval > rval ? 1 : 0;
+                    break;
+                case "==":
+                    result = lval == rval ? 1 : 0;
+                    break;
+                case "~=":
+                    result = lval != rval ? 1 : 0;
+                    break;
+                case "<=":
+                    result = lval <= rval ? 1 : 0;
+                    break;
+                case ">=":
+                    result = lval >= rval ? 1 : 0;
+                    break;
                 default:
                     System.out.println("ERROR DOING MATH");
                     System.exit(-1);
@@ -93,7 +111,7 @@ public class BinaryOperationNode implements ParseNode{
         }
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

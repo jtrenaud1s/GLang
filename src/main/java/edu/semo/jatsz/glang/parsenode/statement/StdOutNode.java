@@ -29,12 +29,12 @@ public class StdOutNode extends StatementNode{
         Object o = ((Symbol)output.evaluate()).getValue();
         if(o.getClass().isArray()) {
             System.out.println(Arrays.toString((Object[]) o));
-        }
+        } else
         System.out.println(o.toString());
         return null;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

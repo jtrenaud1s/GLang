@@ -2,9 +2,12 @@ package edu.semo.jatsz.glang.parsenode;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 
-public class ReferenceNode implements ParseNode {
+import java.io.Serializable;
+
+public class ReferenceNode implements ParseNode, Serializable {
     private Type type;
     private String name;
+    public static final long serialVersionUID = 1;
 
     public ReferenceNode(String name) {
         this.name = name;
@@ -22,6 +25,8 @@ public class ReferenceNode implements ParseNode {
 
     @Override
     public ParseNode evaluate() {
+        if(name.equals("length") || name.equals("split") || name.equals("sub"))
+            return null;
         return this.environment.get(name).evaluate();
     }
 
@@ -29,7 +34,7 @@ public class ReferenceNode implements ParseNode {
         return this.name;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {
@@ -39,8 +44,24 @@ public class ReferenceNode implements ParseNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        this.type = this.environment.get(name).getType();
-
+        if(!this.environment.has(name) && !(name.equals("length") || name.equals("split") || name.equals("sub"))) {
+            System.out.println("Symbol " + name + " does not exist!");
+            System.exit(-1);
+            return;
+        }
+        if(!(name.equals("length") || name.equals("split") || name.equals("sub")))
+            this.type = this.environment.get(name).getType();
+        else {
+            switch(name) {
+                case "length":
+                    this.type = Type.INT;
+                    break;
+                case "split":
+                case "sub":
+                    this.type = Type.STRING;
+                    break;
+            }
+        }
     }
 
 }

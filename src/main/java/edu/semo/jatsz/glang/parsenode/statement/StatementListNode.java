@@ -1,25 +1,32 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
+import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
+import edu.semo.jatsz.glang.parsenode.function.ReturnStatementNode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatementListNode implements ParseNode, SymbolStorage {
-    private List<StatementNode> statements;
+public class StatementListNode implements ParseNode, SymbolStorage, Serializable {
+    private List<ParseNode> statements;
+    private Type returnType = Type.NULL;
+    private String name;
 
-    public StatementListNode(StatementNode statement) {
+    public static long serialVersionUID = 1;
+
+    public StatementListNode(ParseNode statement) {
         this.statements = new ArrayList<>();
         this.statements.add(statement);
         this.table = new SymbolTable();
 
     }
 
-    public void add(StatementNode statement) {
+    public void add(ParseNode statement) {
         this.statements.add(statement);
     }
 
@@ -35,13 +42,15 @@ public class StatementListNode implements ParseNode, SymbolStorage {
 
     @Override
     public ParseNode evaluate() {
-        for(StatementNode statement : statements) {
+        for(ParseNode statement : statements) {
+            if(statement instanceof ReturnStatementNode)
+                return statement.evaluate();
             statement.evaluate();
         }
         return null;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {
@@ -51,7 +60,7 @@ public class StatementListNode implements ParseNode, SymbolStorage {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        for(StatementNode n : statements) {
+        for(ParseNode n : statements) {
             n.setEnvironment(this);
         }
     }
@@ -80,7 +89,24 @@ public class StatementListNode implements ParseNode, SymbolStorage {
     }
 
     @Override
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
     public void set(String name, Symbol sym) {
         this.table.set(name, sym);
+    }
+
+    public Type getReturnType() {
+        return returnType;
+    }
+
+    public void setReturnType(Type returnType) {
+        this.returnType = returnType;
     }
 }

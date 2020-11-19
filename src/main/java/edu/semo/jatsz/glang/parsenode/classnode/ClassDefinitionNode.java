@@ -7,10 +7,12 @@ import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.statement.StatementNode;
 
-public class ClassDefinitionNode extends StatementNode implements SymbolStorage {
+import java.io.Serializable;
+
+public class ClassDefinitionNode extends StatementNode implements SymbolStorage, Serializable {
     private final String name;
     private final SymbolTable table;
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     public ClassDefinitionNode(String name, SymbolTable table) {
         this.name = name;
@@ -25,7 +27,6 @@ public class ClassDefinitionNode extends StatementNode implements SymbolStorage 
     @Override
     public void print(String prefix) {
         System.out.println(prefix + " Class Definition " + name);
-        table.print();
     }
 
     @Override
