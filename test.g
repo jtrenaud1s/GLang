@@ -1,26 +1,11 @@
-class Address {
-    string street;
-    string city;
-    string state;
-    int zip;
+int i = -40;
+
+if(i == 10) {
+    print "ten";
+} else if( i == 50) {
+    print "fifty";
+} else if(i > 80) {
+    print "it works";
+} else {
+    print "something broke";
 };
-
-class Person {
-    Address address;
-    string name;
-    int age;
-};
-
-Address a;
-a.street = "1969 The Woods Circle";
-a.city = "Barnhart";
-a.state = "MO";
-a.zip = 63012;
-
-Person jordan;
-jordan.address = a;
-jordan.name = "Jordan Renaud";
-jordan.age = 22;
-
-print jordan;
-

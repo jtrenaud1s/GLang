@@ -4,12 +4,17 @@ package edu.semo.jatsz.glang.model;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.classnode.ClassDeclarationNode;
+import org.apache.commons.lang3.SerializationUtils;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SymbolTable implements Cloneable
+public class SymbolTable implements Serializable
 {
     private final Map<String, Symbol> map;
+
+    public static final long serialVersionUID = 1L;
 
     public SymbolTable() {
         map = new java.util.LinkedHashMap<>();
@@ -38,7 +43,9 @@ public class SymbolTable implements Cloneable
     @Override
     public SymbolTable clone() {
         SymbolTable s = new SymbolTable();
-        s.map.putAll(this.map);
+        for(Map.Entry<String, Symbol> entry : map.entrySet()) {
+            s.set(entry.getKey(), SerializationUtils.clone(entry.getValue()));
+        }
         return s;
     }
 

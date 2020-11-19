@@ -43,7 +43,7 @@ public class ArrayReferenceNode extends ReferenceNode {
         return this.type;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

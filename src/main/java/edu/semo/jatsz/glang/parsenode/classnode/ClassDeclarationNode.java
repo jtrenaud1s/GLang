@@ -37,6 +37,7 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
         if(this.getEnvironment().has(this.className)) {
             if(this.getEnvironment().get(this.className).getType().equals(Type.CLASS_DEF)) {
                 this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
+                this.table.setSymbolEnvironments(this);
                 Symbol dec = new ClassSymbol(this.className, this.name, this);
                 this.getEnvironment().set(name, dec);
             } else {
@@ -60,7 +61,7 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
         return className;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {
@@ -71,6 +72,8 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
         this.environment.set(name, new Symbol(this.type, name, null));
+        this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
+        this.table.setSymbolEnvironments(this);
         evaluate();
     }
 

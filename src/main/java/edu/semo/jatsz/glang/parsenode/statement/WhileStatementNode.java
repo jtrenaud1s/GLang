@@ -34,7 +34,7 @@ public class WhileStatementNode extends StatementNode{
         return null;
     }
 
-    private SymbolStorage environment;
+    private transient SymbolStorage environment;
 
     @Override
     public SymbolStorage getEnvironment() {

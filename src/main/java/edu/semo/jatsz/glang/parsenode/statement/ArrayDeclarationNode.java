@@ -9,6 +9,7 @@ public class ArrayDeclarationNode extends DeclarationNode {
     private Type type;
     private ParseNode innerLength;
     private boolean multiDimensional;
+
     public ArrayDeclarationNode(Type type, String name, ParseNode length) {
         super(type, name);
         this.type = type;
@@ -31,31 +32,39 @@ public class ArrayDeclarationNode extends DeclarationNode {
     }
 
     public void generateInnerArrays(int length) {
-        int outerlength = (int)((Symbol)this.length.evaluate()).getValue();
-        ArraySymbol[] s = new ArraySymbol[outerlength];
-        for(int i = 0; i < outerlength; i++) {
-            Symbol[] inner = new Symbol[length];
-            for(int j = 0; j < length; j++) {
-                inner[j] = new Symbol(type, name + "[" + i + "][" + j + "](INNER)", null);
-            }
-            s[i] = new ArraySymbol(type, name + "[" + i + "](OUTER)", inner, length);
-        }
-        environment.set(name, new ArraySymbol(type, name, s, outerlength));
-    }
-
-    private SymbolStorage environment;
-    public void setEnvironment(SymbolStorage env) {
-        this.environment = env;
-        int outerlength = (int) ((Symbol) this.length.evaluate()).getValue();
-
-        if (multiDimensional) {
-            generateInnerArrays((int) ((Symbol) this.innerLength.evaluate()).getValue());
-        } else {
-            Symbol[] s = new Symbol[outerlength];
+        environment.set(name, new ArraySymbol(type, name, null, 0));
+        if(this.length != null) {
+            int outerlength = (int) ((Symbol) this.length.evaluate()).getValue();
+            ArraySymbol[] s = new ArraySymbol[outerlength];
             for (int i = 0; i < outerlength; i++) {
-                s[i] = new Symbol(type, name + "[" + i + "]", null);
+                Symbol[] inner = new Symbol[length];
+                for (int j = 0; j < length; j++) {
+                    inner[j] = new Symbol(type, name + "[" + i + "][" + j + "](INNER)", null);
+                }
+                s[i] = new ArraySymbol(type, name + "[" + i + "](OUTER)", inner, length);
             }
             environment.set(name, new ArraySymbol(type, name, s, outerlength));
         }
+    }
+
+    private transient SymbolStorage environment;
+    public void setEnvironment(SymbolStorage env) {
+        this.environment = env;
+        environment.set(name, new ArraySymbol(type, name, null, 0));
+
+        if(this.length != null){
+            int outerlength = (int) ((Symbol) this.length.evaluate()).getValue();
+
+            if (multiDimensional) {
+                generateInnerArrays((int) ((Symbol) this.innerLength.evaluate()).getValue());
+            } else {
+                Symbol[] s = new Symbol[outerlength];
+                for (int i = 0; i < outerlength; i++) {
+                    s[i] = new Symbol(type, name + "[" + i + "]", null);
+                }
+                environment.set(name, new ArraySymbol(type, name, s, outerlength));
+            }
+        }
+
     }
 }

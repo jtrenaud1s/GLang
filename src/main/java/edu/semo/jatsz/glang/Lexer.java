@@ -140,8 +140,23 @@ public class Lexer implements Tokens {
         } else if (value.equals("char")) {
             token = CHARACTER;
             value = null;
+        } else if (value.equals("if")) {
+            token = IF;
+            value = null;
+        } else if (value.equals("else")) {
+            token = ELSE;
+            value = null;
+        } else if (value.equals("function")) {
+            token = FUNCTION;
+            value = null;
         } else if (value.equals("class")) {
             token = CLASS;
+            value = null;
+        } else if (value.equals("return")) {
+            token = RETURN;
+            value = null;
+        } else if(value.equals("null")){
+            token = NULL;
             value = null;
         } else if (!Character.isDigit(value.toString().toCharArray()[0])) {
             token = ID;
@@ -200,11 +215,11 @@ public class Lexer implements Tokens {
 
     // load the next token
     public void next() {
-        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\'', '[', ']', '.'};
-        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE, LSQUARE, RSQUARE, DOT};
+        final char[] c = { '=', '+', '-', ';', '(', ')', '*', '/', '^' ,'{','}', '"', '\'', '[', ']', '.', '<', '>', ','};
+        final int[] ct = { EQUAL, ADD, SUB, SEMI, LPAREN, RPAREN, MULTIPLY, DIVIDE, POW, LCURLY, RCURLY, DQUOTE, QUOTE, LSQUARE, RSQUARE, DOT, LESS, GREATER, COMMA};
 
         // skip whitespace
-        while (Character.isWhitespace(currentChar)) {
+        while (Character.isWhitespace(currentChar) && !(inString || inChar)) {
             nextChar();
         }
 
@@ -254,6 +269,30 @@ public class Lexer implements Tokens {
                 inString = true;
             } else if(currentChar == '\'') {
                 inChar = true;
+            } else if(currentChar == '=') {
+                nextChar();
+                if(currentChar == '=') {
+                    token = EQ;
+                    value = null;
+                }
+            } else if(currentChar == '<') {
+                nextChar();
+                if(currentChar == '=') {
+                    token = LE;
+                    value = null;
+                }
+            } else if(currentChar == '>') {
+                nextChar();
+                if(currentChar == '=') {
+                    token = GE;
+                    value = null;
+                }
+            } else if(currentChar == '~') {
+                nextChar();
+                if(currentChar == '=') {
+                    token = NE;
+                    value = null;
+                }
             }
             nextChar();
         } else {
@@ -292,6 +331,17 @@ public class Lexer implements Tokens {
         label[RSQUARE] = "RSQUARE";
         label[DOT] = "DOT";
         label[CLASS] = "CLASS";
+        label[IF] = "IF";
+        label[ELSE] = "ELSE";
+        label[FUNCTION] = "FUNCTION";
+        label[RETURN] = "RETURN";
+        label[LESS] = "LESS";
+        label[GREATER] = "GREATER";
+        label[EQ] = "EQ";
+        label[NE] = "NE";
+        label[LE] = "LE";
+        label[GE] = "GE";
+        label[COMMA] = "COMMA";
 
         return label[token] + ": " + value;
     }

@@ -4,12 +4,15 @@ import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class ParseTree implements SymbolStorage {
+public class ParseTree implements SymbolStorage, Serializable {
     private SymbolTable global;
     private static ParseTree instance = null;
     private Scanner s;
+
+    public static long serialVersionUID = 1L;
 
     public ParseTree() {
         this.global = new SymbolTable();
@@ -34,6 +37,11 @@ public class ParseTree implements SymbolStorage {
     @Override
     public boolean has(String name) {
         return this.getSymbolTable().containsSymbol(name);
+    }
+
+    @Override
+    public String getName() {
+        return "ParseTree";
     }
 
     @Override

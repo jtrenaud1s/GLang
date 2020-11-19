@@ -3,13 +3,18 @@ package edu.semo.jatsz.glang.parsenode;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
+import edu.semo.jatsz.glang.parsenode.classnode.ClassDeclarationNode;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Symbol implements ParseNode {
+public class Symbol implements ParseNode, Serializable {
     private Type type;
     private String name;
     private Object value;
+
+    public static final long serialVersionUID = 1L;
+
 
     public Symbol(Type type, String name, Object value) {
         this.type = type;
@@ -60,7 +65,7 @@ public class Symbol implements ParseNode {
         } else {
             value = this.value.toString();
         }
-        return this.type + " " + this.name + " = " + value;
+        return value;
     }
 
 
