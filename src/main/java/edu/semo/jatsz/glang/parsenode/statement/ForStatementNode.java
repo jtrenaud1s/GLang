@@ -51,9 +51,11 @@ public class ForStatementNode extends StatementNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
+        statement.set(assign.getDeclaration().getName(), new Symbol(assign.getType(), assign.getDeclaration().getName(), null));
+        statement.setEnvironment(environment);
+
         assign.setEnvironment(statement);
 
-        statement.setEnvironment(this.environment);
 
         condition.setEnvironment(statement);
         increment.setEnvironment(statement);

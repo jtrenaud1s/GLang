@@ -52,6 +52,7 @@ statement: declaration
 | if
 | class_definition
 | expr
+| return
 ;
 
 class_definition: CLASS ID LCURLY declaration_list RCURLY

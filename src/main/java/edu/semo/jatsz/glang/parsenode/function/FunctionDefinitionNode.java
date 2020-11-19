@@ -92,7 +92,7 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
             d.setEnvironment(this.body);
             body.set(d.getName(), new Symbol(d.getType(), d.getName(), null));
         }
-        this.body.setEnvironment(environment);
         evaluate();
+        this.body.setEnvironment(environment);
     }
 }

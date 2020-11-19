@@ -4,6 +4,7 @@ import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
+import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.function.ReturnStatementNode;
@@ -45,7 +46,9 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
         for(ParseNode statement : statements) {
             if(statement instanceof ReturnStatementNode)
                 return statement.evaluate();
-            statement.evaluate();
+            if (statement.evaluate() != null && !(statement.evaluate() instanceof ReferenceNode)) {
+                return statement.evaluate();
+            }
         }
         return null;
     }

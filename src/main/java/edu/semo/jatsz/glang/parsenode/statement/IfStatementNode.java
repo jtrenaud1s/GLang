@@ -38,10 +38,10 @@ public class IfStatementNode extends StatementNode {
         }
 
         if((int)result.getValue() != 0) {
-            this.body.evaluate();
+            return this.body.evaluate();
         } else {
             if(elseBody != null)
-                elseBody.evaluate();
+                return elseBody.evaluate();
         }
         return null;
     }

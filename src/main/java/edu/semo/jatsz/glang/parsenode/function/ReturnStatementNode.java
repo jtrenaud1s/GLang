@@ -48,10 +48,10 @@ public class ReturnStatementNode implements ParseNode {
             this.type = Type.NULL;
         }
 
-        StatementListNode env = (StatementListNode) environment;
+        /*StatementListNode env = (StatementListNode) environment;
         if(!this.type.equals(env.getReturnType())) {
             System.out.println("Returning the wrong type from the function!");
             System.exit(-1);
-        }
+        }*/
     }
 }

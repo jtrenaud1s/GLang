@@ -51,14 +51,14 @@ public class BinaryOperationNode implements ParseNode{
             double rval;
             double result = 0;
 
-            if(left.evaluate().getType().equals(Type.INT)) {
+            if(left.getType().equals(Type.INT)) {
                 lval = (Integer) ((Symbol)left.evaluate()).getValue();
             } else {
                 lval = (Double) ((Symbol)left.evaluate()).getValue();
             }
 
 
-            if(right.evaluate().getType().equals(Type.INT)) {
+            if(right.getType().equals(Type.INT)) {
                 rval = (Integer) ((Symbol)right.evaluate()).getValue();
             } else {
                 rval = (Double) ((Symbol)right.evaluate()).getValue();
@@ -129,9 +129,6 @@ public class BinaryOperationNode implements ParseNode{
             System.out.println("Invalid Types!");
             System.exit(-1);
         } else if(left.getType().equals(Type.DOUBLE) && right.getType().equals(Type.INT)) {
-            System.out.println("Invalid Types!");
-            System.exit(-1);
-        } else if((left.getType().equals(Type.STRING) && !right.getType().equals(Type.STRING)) || (!left.getType().equals(Type.STRING) && right.getType().equals(Type.STRING))) {
             System.out.println("Invalid Types!");
             System.exit(-1);
         }

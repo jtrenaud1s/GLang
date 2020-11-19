@@ -44,6 +44,10 @@ public class AssignmentNode extends StatementNode implements Serializable {
        expression.print(prefix);
     }
 
+    public DeclarationNode getDeclaration() {
+        return this.decl;
+    }
+
     @Override
     public ParseNode evaluate() {
         Symbol s = (Symbol) ref.evaluate();
