@@ -9,10 +9,7 @@ public class UnaryOperationNode implements ParseNode{
     public UnaryOperationNode(String operation, ParseNode expression){
         this.operation = operation;
         this.expression = expression;
-        if (!expression.getType().equals(Type.INT) && !expression.getType().equals(Type.DOUBLE)){
-            System.out.println("Error: invalid data type");
-            System.exit(-1);
-        }
+
     }
 
     @Override
@@ -64,5 +61,19 @@ public class UnaryOperationNode implements ParseNode{
         this.environment = environment;
 
         expression.setEnvironment(this.getEnvironment());
+    }
+
+    @Override
+    public void generateSymbols() {
+        expression.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        expression.resolveTypes();
+        if (!expression.getType().equals(Type.INT) && !expression.getType().equals(Type.DOUBLE)){
+            System.out.println("Error: invalid data type");
+            System.exit(-1);
+        }
     }
 }

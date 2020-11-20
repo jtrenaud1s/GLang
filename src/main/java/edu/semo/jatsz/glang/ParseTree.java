@@ -2,15 +2,18 @@ package edu.semo.jatsz.glang;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
+import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 
 import java.io.Serializable;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class ParseTree implements SymbolStorage, Serializable {
     private SymbolTable global;
     private static ParseTree instance = null;
     private Scanner s;
+    private Stack<ParseNode> stack;
 
     public static long serialVersionUID = 1L;
 
@@ -18,6 +21,7 @@ public class ParseTree implements SymbolStorage, Serializable {
         this.global = new SymbolTable();
         s = new Scanner(System.in);
         instance = this;
+        this.stack = new Stack<>();
     }
 
     @Override
@@ -57,5 +61,9 @@ public class ParseTree implements SymbolStorage, Serializable {
 
     public Scanner getScanner() {
         return this.s;
+    }
+
+    public Stack<ParseNode> getStack() {
+        return stack;
     }
 }

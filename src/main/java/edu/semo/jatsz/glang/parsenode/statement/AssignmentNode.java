@@ -50,6 +50,9 @@ public class AssignmentNode extends StatementNode implements Serializable {
 
     @Override
     public ParseNode evaluate() {
+        if(ref == null)
+            ref = (ReferenceNode) decl.evaluate();
+
         Symbol s = (Symbol) ref.evaluate();
         Symbol n = (Symbol) expression.evaluate();
 
@@ -73,21 +76,42 @@ public class AssignmentNode extends StatementNode implements Serializable {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        if(decl != null) {
+        if (decl != null)
             decl.setEnvironment(this.environment);
-            ref = (ReferenceNode) decl.evaluate();
-        } else {
+        if (ref != null)
             ref.setEnvironment(this.environment);
-        }
 
         expression.setEnvironment(this.environment);
+    }
 
-        // Compare types of the variable and the value you're trying to store in it.
-        if(ref.getType().equals(Type.INT) && expression.getType().equals(Type.DOUBLE)) {
-            System.out.println("Cannot store a double value in an integer variable, you will lose data!");
-            System.exit(-1);
+    @Override
+    public void generateSymbols() {
+        if(decl != null) {
+            decl.generateSymbols();
+        }
+
+        if(ref != null) {
+            ref.generateSymbols();
         }
     }
 
+    @Override
+    public void resolveTypes() {
+        expression.resolveTypes();
+        if(ref != null) {
+            ref.resolveTypes();
+            if(ref.getType().equals(Type.INT) && expression.getType().equals(Type.DOUBLE)) {
+                System.out.println("Cannot store a double value in an integer variable, you will lose data!");
+                System.exit(-1);
+            }
+        }
+        if(decl != null) {
+            decl.resolveTypes();
+            if(decl.getType().equals(Type.INT) && expression.getType().equals(Type.DOUBLE)) {
+                System.out.println("Cannot store a double value in an integer variable, you will lose data!");
+                System.exit(-1);
+            }
+        }
 
+    }
 }

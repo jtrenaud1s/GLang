@@ -6,12 +6,15 @@ import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
 import javax.swing.plaf.nimbus.State;
+import java.io.Serializable;
 
-public class ForStatementNode extends StatementNode {
+public class ForStatementNode extends StatementNode implements Serializable {
     private ParseNode condition;
     private StatementListNode statement;
     private AssignmentNode assign;
     private ParseNode increment;
+
+    public static final long serialVersionUID = 1L;
 
     public ForStatementNode(AssignmentNode assign, ParseNode condition, ParseNode increment, StatementListNode statement) {
         this.assign = assign;
@@ -51,7 +54,6 @@ public class ForStatementNode extends StatementNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        statement.set(assign.getDeclaration().getName(), new Symbol(assign.getType(), assign.getDeclaration().getName(), null));
         statement.setEnvironment(environment);
 
         assign.setEnvironment(statement);
@@ -60,6 +62,22 @@ public class ForStatementNode extends StatementNode {
         condition.setEnvironment(statement);
         increment.setEnvironment(statement);
 
+    }
+
+    @Override
+    public void generateSymbols() {
+        statement.generateSymbols();
+        assign.generateSymbols();
+        condition.generateSymbols();
+        increment.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        statement.resolveTypes();
+        assign.resolveTypes();
+        condition.resolveTypes();
+        increment.resolveTypes();
     }
 }
 

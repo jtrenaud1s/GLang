@@ -68,6 +68,20 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
         }
     }
 
+    @Override
+    public void generateSymbols() {
+        for(ParseNode n : statements) {
+            n.generateSymbols();
+        }
+    }
+
+    @Override
+    public void resolveTypes() {
+        for(ParseNode n : statements) {
+            n.resolveTypes();
+        }
+    }
+
     private SymbolTable table;
 
     @Override

@@ -2,13 +2,16 @@ package edu.semo.jatsz.glang.parsenode;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class ArraySymbol extends Symbol implements Cloneable {
+public class ArraySymbol extends Symbol implements Serializable {
     private int length;
     private Type type;
     private String name;
     private Object value;
+
+    private static final long serialVersionUID = 1L;
 
     public ArraySymbol(Type type, String name, Object value, int length) {
         super(type, name, value);
@@ -38,5 +41,15 @@ public class ArraySymbol extends Symbol implements Cloneable {
             }
         }
         return value ;
+    }
+
+    @Override
+    public void generateSymbols() {
+
+    }
+
+    @Override
+    public void resolveTypes() {
+
     }
 }

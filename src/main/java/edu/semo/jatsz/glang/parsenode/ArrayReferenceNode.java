@@ -54,10 +54,22 @@ public class ArrayReferenceNode extends ReferenceNode {
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
 
-        ref.setEnvironment(this.getEnvironment());
-        index.setEnvironment(this.getEnvironment());
+        ref.setEnvironment(this.environment);
+        index.setEnvironment(this.environment);
+    }
 
+    @Override
+    public void generateSymbols() {
+        ref.generateSymbols();
+        index.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        ref.resolveTypes();
+        index.resolveTypes();
         this.type = ref.getType();
+
     }
 
 }

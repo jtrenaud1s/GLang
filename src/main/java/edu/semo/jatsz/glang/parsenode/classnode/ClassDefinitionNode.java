@@ -43,9 +43,16 @@ public class ClassDefinitionNode extends StatementNode implements SymbolStorage,
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
+    }
 
+    @Override
+    public void generateSymbols() {
         this.environment.set(name, new Symbol(Type.CLASS_DEF, this.name, this));
         this.table.setSymbolEnvironments(this);
+    }
+
+    @Override
+    public void resolveTypes() {
 
     }
 

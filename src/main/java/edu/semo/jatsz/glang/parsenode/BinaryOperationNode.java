@@ -2,19 +2,21 @@ package edu.semo.jatsz.glang.parsenode;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 
-public class BinaryOperationNode implements ParseNode{
+import java.io.Serializable;
+
+public class BinaryOperationNode implements ParseNode, Serializable {
     private ParseNode left;
     private ParseNode right;
     private String operation;
     private Type type;
 
+    public static final long serialVersionUID = 1L;
+
+
     public BinaryOperationNode(ParseNode left, String operation, ParseNode right) {
         this.left = left;
         this.operation = operation;
         this.right = right;
-
-
-
     }
 
     @Override
@@ -124,6 +126,17 @@ public class BinaryOperationNode implements ParseNode{
 
         left.setEnvironment(this.environment);
         right.setEnvironment(this.environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+
+    }
+
+    @Override
+    public void resolveTypes() {
+        left.resolveTypes();
+        right.resolveTypes();
 
         if(left.getType().equals(Type.INT) && right.getType().equals(Type.DOUBLE)) {
             System.out.println("Invalid Types!");

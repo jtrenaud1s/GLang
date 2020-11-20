@@ -119,6 +119,7 @@ function_statement: declaration
 | for
 | if
 | return
+| expr
 ;
 
 return: RETURN expr
@@ -432,6 +433,8 @@ char: QUOTE CHAR QUOTE
             parser.next();
             if(parser.parse()) {
                 parser.getEntryPoint().setEnvironment(ParseTree.get());
+                parser.getEntryPoint().generateSymbols();
+                parser.getEntryPoint().resolveTypes();
                 parser.getEntryPoint().evaluate();
             }
         } catch(Exception e) {

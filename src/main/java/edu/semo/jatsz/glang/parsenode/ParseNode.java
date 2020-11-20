@@ -8,4 +8,6 @@ public interface ParseNode {
     ParseNode evaluate();
     SymbolStorage getEnvironment();
     void setEnvironment(SymbolStorage environment);
+    void generateSymbols();
+    void resolveTypes();
 }

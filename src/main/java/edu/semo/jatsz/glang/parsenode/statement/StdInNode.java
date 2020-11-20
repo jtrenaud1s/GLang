@@ -9,6 +9,7 @@ import edu.semo.jatsz.glang.parsenode.Type;
 
 public class StdInNode extends StatementNode {
     private ReferenceNode ref;
+    private Type type;
 
     public StdInNode(ReferenceNode referenceNode) {
         this.ref = referenceNode;
@@ -16,7 +17,7 @@ public class StdInNode extends StatementNode {
 
     @Override
     public Type getType() {
-        return Type.NULL;
+        return this.type;
     }
 
     @Override
@@ -56,5 +57,16 @@ public class StdInNode extends StatementNode {
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
         ref.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        ref.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        ref.resolveTypes();
+        this.type = ref.getType();
     }
 }

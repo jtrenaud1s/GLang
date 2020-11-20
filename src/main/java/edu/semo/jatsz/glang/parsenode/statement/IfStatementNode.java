@@ -5,11 +5,15 @@ import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-public class IfStatementNode extends StatementNode {
+import java.io.Serializable;
+
+public class IfStatementNode extends StatementNode implements Serializable {
     private ParseNode condition;
     private StatementListNode body;
     private StatementListNode elseBody;
     private transient SymbolStorage environment;
+
+    private static final long serialVersionUID = 1L;
 
     public IfStatementNode(ParseNode condition, StatementListNode body, StatementListNode elseBody) {
         super();
@@ -20,7 +24,7 @@ public class IfStatementNode extends StatementNode {
 
     @Override
     public Type getType() {
-        return Type.NULL;
+        return ((StatementListNode)getEnvironment()).getType();
     }
 
     @Override
@@ -59,5 +63,24 @@ public class IfStatementNode extends StatementNode {
 
         if(this.elseBody != null)
             this.elseBody.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        condition.generateSymbols();
+        body.generateSymbols();
+        if(elseBody != null)
+            elseBody.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        condition.resolveTypes();
+        body.setReturnType(((StatementListNode)environment).getReturnType());
+        body.resolveTypes();
+        if(elseBody != null){
+            elseBody.setReturnType(((StatementListNode)environment).getReturnType());
+            elseBody.resolveTypes();
+        }
     }
 }

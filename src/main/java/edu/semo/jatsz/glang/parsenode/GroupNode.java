@@ -2,13 +2,16 @@ package edu.semo.jatsz.glang.parsenode;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 
-public class GroupNode implements ParseNode{
+import java.io.Serializable;
+
+public class GroupNode implements ParseNode, Serializable {
     private ParseNode expression;
     private Type type;
 
+    public static final long serialVersionUID = 1L;
+
     public GroupNode(ParseNode expression) {
         this.expression = expression;
-        this.type = expression.getType();
     }
 
     @Override
@@ -36,7 +39,16 @@ public class GroupNode implements ParseNode{
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-
         expression.setEnvironment(this.environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        expression.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        this.type = expression.getType();
     }
 }

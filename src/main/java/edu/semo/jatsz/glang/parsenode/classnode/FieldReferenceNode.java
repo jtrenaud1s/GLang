@@ -46,8 +46,19 @@ public class FieldReferenceNode extends ReferenceNode {
         ClassSymbol classDef = (ClassSymbol)classRef.evaluate();
         ClassDeclarationNode ref = (ClassDeclarationNode) classDef.getValue();
         this.field.setEnvironment(ref);
-        this.type = field.getType();
     }
 
+    @Override
+    public void generateSymbols() {
+        field.generateSymbols();
+        classRef.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        this.type = field.getType();
+        field.resolveTypes();
+        classRef.resolveTypes();
+    }
 
 }

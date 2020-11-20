@@ -33,7 +33,6 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
         this.body = body;
         this.body.setReturnType(this.type);
         body.setName("function body");
-
     }
 
     public ParseNode call(ArrayList<ParseNode> arguments) {
@@ -64,6 +63,10 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
         return body.evaluate();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public Type getType() {
         return this.type;
@@ -90,9 +93,21 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
         this.environment = environment;
         for(DeclarationNode d : this.parameters) {
             d.setEnvironment(this.body);
+        }
+        this.body.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        body.generateSymbols();
+        for(DeclarationNode d : this.parameters) {
             body.set(d.getName(), new Symbol(d.getType(), d.getName(), null));
         }
         evaluate();
-        this.body.setEnvironment(environment);
+    }
+
+    @Override
+    public void resolveTypes() {
+        body.resolveTypes();
     }
 }

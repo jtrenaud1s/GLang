@@ -77,4 +77,10 @@ public class Symbol implements ParseNode, Serializable {
     @Override
     public void setEnvironment(SymbolStorage environment) {
     }
+
+    @Override
+    public void generateSymbols() {}
+
+    @Override
+    public void resolveTypes() {}
 }

@@ -34,22 +34,10 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
 
     @Override
     public ParseNode evaluate() {
-        if(this.getEnvironment().has(this.className)) {
-            if(this.getEnvironment().get(this.className).getType().equals(Type.CLASS_DEF)) {
-                this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
-                this.table.setSymbolEnvironments(this);
-                Symbol dec = new ClassSymbol(this.className, this.name, this);
-                this.getEnvironment().set(name, dec);
-            } else {
-                System.out.println(this.className + " is not a class!");
-                System.exit(-1);
-            }
-        } else {
-            System.out.println(this.className + " does not exist!");
-            System.exit(-1);
-        }
         ReferenceNode ref = new ReferenceNode(name);
         ref.setEnvironment(this.getEnvironment());
+        ref.generateSymbols();
+        ref.resolveTypes();
         return ref;
     }
 
@@ -71,10 +59,32 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        this.environment.set(name, new Symbol(this.type, name, null));
-        this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
-        this.table.setSymbolEnvironments(this);
-        evaluate();
+        this.environment.set(name, new ClassSymbol(this.className, name, null));
+        //this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
+        //this.table.setSymbolEnvironments(this);
+    }
+
+    @Override
+    public void generateSymbols() {
+        if(this.getEnvironment().has(this.className)) {
+            if(this.getEnvironment().get(this.className).getType().equals(Type.CLASS_DEF)) {
+                this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
+                this.table.setSymbolEnvironments(this);
+                Symbol dec = new ClassSymbol(this.className, this.name, this);
+                this.getEnvironment().set(name, dec);
+            } else {
+                System.out.println(this.className + " is not a class!");
+                System.exit(-1);
+            }
+        } else {
+            System.out.println(this.className + " does not exist!");
+            System.exit(-1);
+        }
+    }
+
+    @Override
+    public void resolveTypes() {
+
     }
 
     private SymbolTable table;
