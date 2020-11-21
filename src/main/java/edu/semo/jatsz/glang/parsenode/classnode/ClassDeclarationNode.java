@@ -35,7 +35,7 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
     @Override
     public ParseNode evaluate() {
         ReferenceNode ref = new ReferenceNode(name);
-        ref.setEnvironment(this.getEnvironment());
+        ref.setEnvironment(this.environment);
         ref.generateSymbols();
         ref.resolveTypes();
         return ref;
@@ -59,17 +59,16 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        this.environment.set(name, new ClassSymbol(this.className, name, null));
-        //this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
-        //this.table.setSymbolEnvironments(this);
     }
 
     @Override
     public void generateSymbols() {
+        this.environment.set(name, new ClassSymbol(this.className, name, null));
         if(this.getEnvironment().has(this.className)) {
             if(this.getEnvironment().get(this.className).getType().equals(Type.CLASS_DEF)) {
                 this.table = ((ClassDefinitionNode)this.getEnvironment().get(this.className).getValue()).getSymbolTable().clone();
                 this.table.setSymbolEnvironments(this);
+                this.table.generateSymbols();
                 Symbol dec = new ClassSymbol(this.className, this.name, this);
                 this.getEnvironment().set(name, dec);
             } else {
@@ -84,7 +83,7 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
 
     @Override
     public void resolveTypes() {
-
+        this.table.resolveTypes();
     }
 
     private SymbolTable table;
@@ -105,7 +104,7 @@ public class ClassDeclarationNode extends DeclarationNode implements SymbolStora
     @Override
     public boolean has(String name) {
         if(this.table.containsSymbol(name))
-            return this.table.containsSymbol(name);
+            return true;
         else
             return this.environment.has(name);
     }

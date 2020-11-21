@@ -47,6 +47,7 @@ public class FunctionCallStatement implements ParseNode, Serializable {
 
         if(this.owner != null) {
             Symbol toExecuteOn = (Symbol) owner.evaluate();
+
             switch (function.getName()) {
                 case "length":
                     if(toExecuteOn instanceof ArraySymbol) {
@@ -113,32 +114,29 @@ public class FunctionCallStatement implements ParseNode, Serializable {
                     }
 
                     FunctionDefinitionNode function = SerializationUtils.clone((FunctionDefinitionNode) ref.getValue());
-                    function.setEnvironment(environment);
+                    function.setEnvironment((ClassDeclarationNode)toExecuteOn.getValue());
                     function.generateSymbols();
                     function.resolveTypes();
-
-                    function.setName(function.getName() + "r");
-
+                    //function.setName(function.getName() + "r");
                     return function.call(vals);
             }
-        } else {
-            Symbol ref = (Symbol) this.function.evaluate();
-
-            if(!(ref instanceof FunctionSymbol)) {
-                System.out.println(this.function.getName() + " is not a function!");
-                System.exit(-1);
-            }
-
-            FunctionDefinitionNode function = SerializationUtils.clone((FunctionDefinitionNode) ref.getValue());
-            function.setEnvironment(environment);
-            function.generateSymbols();
-            function.resolveTypes();
-            function.setName(function.getName() + "r");
-
-
-            return function.call(vals);
         }
-        return null;
+        Symbol ref = (Symbol) this.function.evaluate();
+
+        if(!(ref instanceof FunctionSymbol)) {
+            System.out.println(this.function.getName() + " is not a function!");
+            System.exit(-1);
+        }
+
+        FunctionDefinitionNode function = SerializationUtils.clone((FunctionDefinitionNode) ref.getValue());
+        function.setEnvironment(environment);
+        function.generateSymbols();
+        function.resolveTypes();
+        //function.setName(function.getName() + "r");
+
+        //System.out.println("calling " + function.getName() + vals);
+
+        return function.call(vals);
     }
 
     @Override
@@ -149,23 +147,17 @@ public class FunctionCallStatement implements ParseNode, Serializable {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        if(this.owner != null) {
-            this.owner.setEnvironment(environment);
-            if(this.owner.getType() != null && this.owner.getType().equals(Type.CLASS)){
-                ClassDeclarationNode theClass = (ClassDeclarationNode)((ClassSymbol)owner.evaluate()).getValue();
-                this.function.setEnvironment(theClass);
-            } else {
-                this.function.setEnvironment(environment);
-            }
-        } else {
 
-            this.function.setEnvironment(environment);
-        }
+        if(this.owner != null)
+            this.owner.setEnvironment(environment);
+
 
         if(this.arguments != null)
             for(ParseNode n : arguments) {
                 n.setEnvironment(environment);
             }
+
+        this.function.setEnvironment(environment);
 
     }
 
@@ -183,15 +175,23 @@ public class FunctionCallStatement implements ParseNode, Serializable {
 
     @Override
     public void resolveTypes() {
-        function.resolveTypes();
-        this.type = function.getType();
+
         if(owner != null) {
             owner.resolveTypes();
+            if(this.owner.getType().equals(Type.CLASS)){
+                ClassDeclarationNode theClass = (ClassDeclarationNode)((ClassSymbol)owner.evaluate()).getValue();
+                this.function.setEnvironment(theClass);
+            }
         }
 
         if(this.arguments != null)
             for(ParseNode n : arguments) {
                 n.resolveTypes();
             }
+
+
+
+        function.resolveTypes();
+        this.type = function.getType();
     }
 }

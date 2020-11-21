@@ -44,10 +44,11 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
     @Override
     public ParseNode evaluate() {
         for(ParseNode statement : statements) {
+            ParseNode eval = statement.evaluate();
             if(statement instanceof ReturnStatementNode)
-                return statement.evaluate();
-            if (statement.evaluate() != null && !(statement.evaluate() instanceof ReferenceNode)) {
-                return statement.evaluate();
+                return eval;
+            if (eval != null && !(eval instanceof ReferenceNode)) {
+                return eval;
             }
         }
         return null;
@@ -100,7 +101,7 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
     @Override
     public boolean has(String name) {
         if(this.table.containsSymbol(name))
-            return this.table.containsSymbol(name);
+            return true;
         else
             return this.environment.has(name);
     }

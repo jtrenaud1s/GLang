@@ -2,8 +2,10 @@ package edu.semo.jatsz.glang.parsenode.statement;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
+import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
+import edu.semo.jatsz.glang.parsenode.function.ReturnStatementNode;
 
 import javax.swing.plaf.nimbus.State;
 import java.io.Serializable;
@@ -38,7 +40,10 @@ public class ForStatementNode extends StatementNode implements Serializable {
     public ParseNode evaluate() {
         assign.evaluate();
         while ((int)((Symbol)condition.evaluate()).getValue() !=0){
-            statement.evaluate();
+            ParseNode eval = statement.evaluate();
+            if(eval != null) {
+                return eval;
+            }
             increment.evaluate();
         }
         return null;

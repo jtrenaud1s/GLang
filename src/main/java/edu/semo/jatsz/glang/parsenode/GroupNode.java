@@ -49,6 +49,7 @@ public class GroupNode implements ParseNode, Serializable {
 
     @Override
     public void resolveTypes() {
+        expression.resolveTypes();
         this.type = expression.getType();
     }
 }

@@ -1,10 +1,8 @@
 package edu.semo.jatsz.glang.parsenode.statement;
 
 import edu.semo.jatsz.glang.model.SymbolStorage;
-import edu.semo.jatsz.glang.parsenode.ParseNode;
-import edu.semo.jatsz.glang.parsenode.ReferenceNode;
-import edu.semo.jatsz.glang.parsenode.Symbol;
-import edu.semo.jatsz.glang.parsenode.Type;
+import edu.semo.jatsz.glang.parsenode.*;
+import edu.semo.jatsz.glang.parsenode.function.FunctionCallStatement;
 
 import java.io.Serializable;
 
@@ -54,11 +52,21 @@ public class AssignmentNode extends StatementNode implements Serializable {
             ref = (ReferenceNode) decl.evaluate();
 
         Symbol s = (Symbol) ref.evaluate();
-        Symbol n = (Symbol) expression.evaluate();
+        ParseNode node = expression.evaluate();
+        Symbol n = (Symbol) node;
+
+        if(node instanceof FunctionCallStatement)
+            n = (Symbol)node.evaluate();
+
 
         if(s.getType().equals(Type.DOUBLE) && n.getType().equals(Type.INT)) {
             double value = (Integer) n.getValue();
             n.setValue(value);
+        }
+
+        if((s instanceof ArraySymbol && !(n instanceof ArraySymbol)) || (n instanceof ArraySymbol && !(s instanceof ArraySymbol))){
+            System.out.println("Cannot assign array to non-array symbol!");
+            System.exit(-1);
         }
 
 

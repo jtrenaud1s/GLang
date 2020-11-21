@@ -53,13 +53,15 @@ public class ReferenceNode implements ParseNode, Serializable {
 
     @Override
     public void resolveTypes() {
-        if (!this.environment.has(name) && !(name.equals("length") || name.equals("split") || name.equals("sub"))) {
-            System.out.println("Symbol " + name + " does not exist!");
-            System.exit(-1);
-            return;
-        }
-        if (!(name.equals("length") || name.equals("split") || name.equals("sub")))
+
+        if (!(name.equals("length") || name.equals("split") || name.equals("sub"))) {
+            if (!this.environment.has(name)) {
+                System.out.println("Symbol " + environment.getName() + "." + name + " does not exist!");
+                System.exit(-1);
+                return;
+            }
             this.type = this.environment.get(name).getType();
+        }
         else {
             switch (name) {
                 case "length":
