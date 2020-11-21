@@ -43,8 +43,10 @@ public class ArrayDeclarationNode extends DeclarationNode {
 
     public void setMulti(boolean mult, ParseNode length) {
         this.multiDimensional = mult;
-        this.innerLength = length;
-        this.innerLength.setEnvironment(this.environment);
+        if(length != null){
+            this.innerLength = length;
+            this.innerLength.setEnvironment(this.environment);
+        }
     }
 
 
