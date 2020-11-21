@@ -5,11 +5,14 @@ import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class StdOutNode extends StatementNode{
+public class StdOutNode extends StatementNode implements Serializable {
     private ParseNode output;
+
+    public static final long serialVersionUID = 1L;
+
     public StdOutNode(ParseNode output) {
         this.output = output;
     }
@@ -45,5 +48,15 @@ public class StdOutNode extends StatementNode{
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
         this.output.setEnvironment(this.environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        output.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        output.resolveTypes();
     }
 }

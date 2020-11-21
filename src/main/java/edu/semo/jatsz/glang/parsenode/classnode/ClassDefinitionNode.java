@@ -32,7 +32,7 @@ public class ClassDefinitionNode extends StatementNode implements SymbolStorage,
     @Override
     public ParseNode evaluate() {
         this.environment.set(name, new Symbol(Type.CLASS_DEF, this.name, this));
-        return this;
+        return null;
     }
 
     @Override
@@ -43,9 +43,16 @@ public class ClassDefinitionNode extends StatementNode implements SymbolStorage,
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
+    }
 
+    @Override
+    public void generateSymbols() {
         this.environment.set(name, new Symbol(Type.CLASS_DEF, this.name, this));
         this.table.setSymbolEnvironments(this);
+    }
+
+    @Override
+    public void resolveTypes() {
 
     }
 
@@ -69,7 +76,7 @@ public class ClassDefinitionNode extends StatementNode implements SymbolStorage,
     @Override
     public boolean has(String name) {
         if(this.table.containsSymbol(name))
-            return this.table.containsSymbol(name);
+            return true;
         else
             return this.environment.has(name);
     }

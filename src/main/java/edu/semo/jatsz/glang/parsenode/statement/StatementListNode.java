@@ -4,6 +4,7 @@ import edu.semo.jatsz.glang.ParseTree;
 import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.model.SymbolTable;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
+import edu.semo.jatsz.glang.parsenode.ReferenceNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.function.ReturnStatementNode;
@@ -43,9 +44,12 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
     @Override
     public ParseNode evaluate() {
         for(ParseNode statement : statements) {
+            ParseNode eval = statement.evaluate();
             if(statement instanceof ReturnStatementNode)
-                return statement.evaluate();
-            statement.evaluate();
+                return eval;
+            if (eval != null && !(eval instanceof ReferenceNode)) {
+                return eval;
+            }
         }
         return null;
     }
@@ -62,6 +66,20 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
         this.environment = environment;
         for(ParseNode n : statements) {
             n.setEnvironment(this);
+        }
+    }
+
+    @Override
+    public void generateSymbols() {
+        for(ParseNode n : statements) {
+            n.generateSymbols();
+        }
+    }
+
+    @Override
+    public void resolveTypes() {
+        for(ParseNode n : statements) {
+            n.resolveTypes();
         }
     }
 
@@ -83,7 +101,7 @@ public class StatementListNode implements ParseNode, SymbolStorage, Serializable
     @Override
     public boolean has(String name) {
         if(this.table.containsSymbol(name))
-            return this.table.containsSymbol(name);
+            return true;
         else
             return this.environment.has(name);
     }

@@ -6,6 +6,6 @@ public interface SymbolStorage {
     SymbolTable getSymbolTable();
     Symbol get(String name);
     boolean has(String name);
-    String getName();
+    String getName(); //for debugging purposes
     void set(String name, Symbol sym);
 }

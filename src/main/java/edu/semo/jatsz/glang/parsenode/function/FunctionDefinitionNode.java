@@ -5,12 +5,15 @@ import edu.semo.jatsz.glang.parsenode.ArraySymbol;
 import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
+import edu.semo.jatsz.glang.parsenode.classnode.ClassDeclarationNode;
+import edu.semo.jatsz.glang.parsenode.classnode.ClassSymbol;
 import edu.semo.jatsz.glang.parsenode.statement.ArrayDeclarationNode;
 import edu.semo.jatsz.glang.parsenode.statement.DeclarationNode;
 import edu.semo.jatsz.glang.parsenode.statement.StatementListNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FunctionDefinitionNode extends DeclarationNode implements Serializable {
     private Type type;
@@ -33,7 +36,6 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
         this.body = body;
         this.body.setReturnType(this.type);
         body.setName("function body");
-
     }
 
     public ParseNode call(ArrayList<ParseNode> arguments) {
@@ -59,9 +61,11 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
             body.set(param.getName(), (Symbol) arg.evaluate().evaluate());
         }
 
-
-
         return body.evaluate();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -90,9 +94,35 @@ public class FunctionDefinitionNode extends DeclarationNode implements Serializa
         this.environment = environment;
         for(DeclarationNode d : this.parameters) {
             d.setEnvironment(this.body);
-            body.set(d.getName(), new Symbol(d.getType(), d.getName(), null));
         }
         this.body.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        body.generateSymbols();
+        for(DeclarationNode d : this.parameters) {
+            if (d instanceof ClassDeclarationNode)
+                body.set(d.getName(), new ClassSymbol(((ClassDeclarationNode) d).getClassName(), d.getName(), null));
+            else
+            body.set(d.getName(), new Symbol(d.getType(), d.getName(), null));
+        }
         evaluate();
+    }
+
+    @Override
+    public void resolveTypes() {
+        body.resolveTypes();
+    }
+
+    public String toString(){
+        String params = "";
+        if(parameters.size() == 0)
+            return "function()";
+        params += parameters.get(0).getType() + " " + parameters.get(0).getName();
+        for(DeclarationNode p : parameters.subList(1, parameters.size())) {
+            params += ", " + p.getType() + " " + p.getName();
+        }
+        return "function(" + params + ")";
     }
 }

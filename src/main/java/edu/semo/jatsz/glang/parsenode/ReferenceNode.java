@@ -43,16 +43,27 @@ public class ReferenceNode implements ParseNode, Serializable {
 
     @Override
     public void setEnvironment(SymbolStorage environment) {
-        this.environment = environment;
-        if(!this.environment.has(name) && !(name.equals("length") || name.equals("split") || name.equals("sub"))) {
-            System.out.println("Symbol " + name + " does not exist!");
-            System.exit(-1);
-            return;
-        }
-        if(!(name.equals("length") || name.equals("split") || name.equals("sub")))
+            this.environment = environment;
+    }
+
+    @Override
+    public void generateSymbols() {
+
+    }
+
+    @Override
+    public void resolveTypes() {
+
+        if (!(name.equals("length") || name.equals("split") || name.equals("sub"))) {
+            if (!this.environment.has(name)) {
+                System.out.println("Symbol " + environment.getName() + "." + name + " does not exist!");
+                System.exit(-1);
+                return;
+            }
             this.type = this.environment.get(name).getType();
+        }
         else {
-            switch(name) {
+            switch (name) {
                 case "length":
                     this.type = Type.INT;
                     break;

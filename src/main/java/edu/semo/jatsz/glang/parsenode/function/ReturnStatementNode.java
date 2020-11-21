@@ -5,10 +5,14 @@ import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Type;
 import edu.semo.jatsz.glang.parsenode.statement.StatementListNode;
 
-public class ReturnStatementNode implements ParseNode {
+import java.io.Serializable;
+
+public class ReturnStatementNode implements ParseNode, Serializable {
     private ParseNode expression;
     private Type type;
     private transient SymbolStorage environment;
+
+    public static final long serialVersionUID = 1L;
 
     public ReturnStatementNode(ParseNode expression) {
         this.expression = expression;
@@ -41,13 +45,24 @@ public class ReturnStatementNode implements ParseNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        if(expression != null) {
+        if(expression != null)
             this.expression.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        if(expression != null)
+        expression.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        if(expression != null) {
+            expression.resolveTypes();
             this.type = expression.getType();
         } else {
             this.type = Type.NULL;
         }
-
         StatementListNode env = (StatementListNode) environment;
         if(!this.type.equals(env.getReturnType())) {
             System.out.println("Returning the wrong type from the function!");

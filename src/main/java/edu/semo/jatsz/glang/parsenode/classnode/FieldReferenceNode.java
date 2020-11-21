@@ -17,6 +17,8 @@ public class FieldReferenceNode extends ReferenceNode {
 
     @Override
     public ParseNode evaluate() {
+
+
         return field.evaluate();
     }
 
@@ -43,11 +45,23 @@ public class FieldReferenceNode extends ReferenceNode {
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
         classRef.setEnvironment(environment);
+    }
+
+    @Override
+    public void generateSymbols() {
+        field.generateSymbols();
+        classRef.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
         ClassSymbol classDef = (ClassSymbol)classRef.evaluate();
         ClassDeclarationNode ref = (ClassDeclarationNode) classDef.getValue();
         this.field.setEnvironment(ref);
+
+        field.resolveTypes();
+        classRef.resolveTypes();
         this.type = field.getType();
     }
-
 
 }

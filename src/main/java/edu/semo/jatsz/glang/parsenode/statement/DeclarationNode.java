@@ -31,9 +31,10 @@ public class DeclarationNode extends StatementNode implements Serializable {
 
     @Override
     public ParseNode evaluate() {
-        this.getEnvironment().set(name, new Symbol(this.type, name, null));
         ReferenceNode ref = new ReferenceNode(name);
         ref.setEnvironment(this.getEnvironment());
+        ref.generateSymbols();
+        ref.resolveTypes();
         return ref;
     }
 
@@ -52,6 +53,15 @@ public class DeclarationNode extends StatementNode implements Serializable {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
+    }
+
+    @Override
+    public void generateSymbols() {
         this.environment.set(name, new Symbol(this.type, name, null));
+    }
+
+    @Override
+    public void resolveTypes() {
+
     }
 }

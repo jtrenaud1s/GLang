@@ -4,15 +4,19 @@ import edu.semo.jatsz.glang.model.SymbolStorage;
 import edu.semo.jatsz.glang.parsenode.*;
 import edu.semo.jatsz.glang.parsenode.classnode.ClassDeclarationNode;
 import edu.semo.jatsz.glang.parsenode.classnode.ClassSymbol;
+import org.apache.commons.lang3.SerializationUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FunctionCallStatement implements ParseNode {
+public class FunctionCallStatement implements ParseNode, Serializable {
     private Type type;
     private ReferenceNode owner;
     private ReferenceNode function;
     private ArrayList<ParseNode> arguments;
     private transient SymbolStorage environment;
+
+    public static final long serialVersionUID = 1L;
 
     public FunctionCallStatement(ReferenceNode function, ArrayList<ParseNode> arguments, ReferenceNode owner) {
         this.function = function;
@@ -43,6 +47,7 @@ public class FunctionCallStatement implements ParseNode {
 
         if(this.owner != null) {
             Symbol toExecuteOn = (Symbol) owner.evaluate();
+
             switch (function.getName()) {
                 case "length":
                     if(toExecuteOn instanceof ArraySymbol) {
@@ -92,6 +97,7 @@ public class FunctionCallStatement implements ParseNode {
                             for(int i = 0; i < tokens.length; i++) {
                                 symbol[i] = new Symbol(Type.STRING, toExecuteOn.getName() + "[" + i + "]", tokens[i]);
                             }
+
                             return new ArraySymbol(Type.STRING, toExecuteOn.getName() + ".split()", symbol, tokens.length);
                         } else {
                             System.out.println("split() can only be used on a string!");
@@ -107,25 +113,30 @@ public class FunctionCallStatement implements ParseNode {
                         System.exit(-1);
                     }
 
-                    FunctionDefinitionNode function = (FunctionDefinitionNode) ref.getValue();
-
-
+                    FunctionDefinitionNode function = SerializationUtils.clone((FunctionDefinitionNode) ref.getValue());
+                    function.setEnvironment((ClassDeclarationNode)toExecuteOn.getValue());
+                    function.generateSymbols();
+                    function.resolveTypes();
+                    //function.setName(function.getName() + "r");
                     return function.call(vals);
             }
-        } else {
-            Symbol ref = (Symbol) this.function.evaluate();
-
-            if(!(ref instanceof FunctionSymbol)) {
-                System.out.println(this.function.getName() + " is not a function!");
-                System.exit(-1);
-            }
-
-            FunctionDefinitionNode function = (FunctionDefinitionNode) ref.getValue();
-
-
-            return function.call(vals);
         }
-        return null;
+        Symbol ref = (Symbol) this.function.evaluate();
+
+        if(!(ref instanceof FunctionSymbol)) {
+            System.out.println(this.function.getName() + " is not a function!");
+            System.exit(-1);
+        }
+
+        FunctionDefinitionNode function = SerializationUtils.clone((FunctionDefinitionNode) ref.getValue());
+        function.setEnvironment(environment);
+        function.generateSymbols();
+        function.resolveTypes();
+        //function.setName(function.getName() + "r");
+
+        //System.out.println("calling " + function.getName() + vals);
+
+        return function.call(vals);
     }
 
     @Override
@@ -136,18 +147,9 @@ public class FunctionCallStatement implements ParseNode {
     @Override
     public void setEnvironment(SymbolStorage environment) {
         this.environment = environment;
-        if(this.owner != null) {
-            this.owner.setEnvironment(environment);
-            if(this.owner.getType().equals(Type.CLASS)){
-                ClassDeclarationNode theClass = (ClassDeclarationNode)((ClassSymbol)owner.evaluate()).getValue();
-                this.function.setEnvironment(theClass);
-            } else {
-                this.function.setEnvironment(environment);
-            }
-        } else {
-            this.function.setEnvironment(environment);
-        }
 
+        if(this.owner != null)
+            this.owner.setEnvironment(environment);
 
 
         if(this.arguments != null)
@@ -155,6 +157,41 @@ public class FunctionCallStatement implements ParseNode {
                 n.setEnvironment(environment);
             }
 
+        this.function.setEnvironment(environment);
+
+    }
+
+    @Override
+    public void generateSymbols() {
+        function.generateSymbols();
+        if(owner != null)
+            owner.generateSymbols();
+
+        if(this.arguments != null)
+            for(ParseNode n : arguments) {
+                n.generateSymbols();
+            }
+    }
+
+    @Override
+    public void resolveTypes() {
+
+        if(owner != null) {
+            owner.resolveTypes();
+            if(this.owner.getType().equals(Type.CLASS)){
+                ClassDeclarationNode theClass = (ClassDeclarationNode)((ClassSymbol)owner.evaluate()).getValue();
+                this.function.setEnvironment(theClass);
+            }
+        }
+
+        if(this.arguments != null)
+            for(ParseNode n : arguments) {
+                n.resolveTypes();
+            }
+
+
+
+        function.resolveTypes();
         this.type = function.getType();
     }
 }

@@ -5,10 +5,15 @@ import edu.semo.jatsz.glang.parsenode.ParseNode;
 import edu.semo.jatsz.glang.parsenode.Symbol;
 import edu.semo.jatsz.glang.parsenode.Type;
 
-public class WhileStatementNode extends StatementNode{
+import java.io.Serializable;
+
+public class WhileStatementNode extends StatementNode implements Serializable {
 
     private ParseNode condition;
     private StatementListNode statements;
+    private Type type;
+
+    public static final long serialVersionUID = 1L;
 
     public WhileStatementNode(ParseNode condition, StatementListNode statements) {
         this.condition = condition;
@@ -17,7 +22,7 @@ public class WhileStatementNode extends StatementNode{
 
     @Override
     public Type getType() {
-        return Type.NULL;
+        return this.type;
     }
 
     @Override
@@ -48,5 +53,18 @@ public class WhileStatementNode extends StatementNode{
 
         condition.setEnvironment(statements);
 
+    }
+
+    @Override
+    public void generateSymbols() {
+        statements.generateSymbols();
+        condition.generateSymbols();
+    }
+
+    @Override
+    public void resolveTypes() {
+        statements.resolveTypes();
+        condition.resolveTypes();
+        this.type = ((StatementListNode)this.getEnvironment()).getReturnType();
     }
 }

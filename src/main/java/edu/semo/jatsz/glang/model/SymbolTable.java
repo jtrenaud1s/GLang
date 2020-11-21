@@ -76,4 +76,18 @@ public class SymbolTable implements Serializable
         }
         return members.toString();
     }
+
+    public void generateSymbols() {
+        for(Map.Entry<String, Symbol> entry : map.entrySet()) {
+            if(entry.getValue().getValue() != null)
+                ((ParseNode) entry.getValue().getValue()).generateSymbols();
+        }
+    }
+
+    public void resolveTypes() {
+        for(Map.Entry<String, Symbol> entry : map.entrySet()) {
+            if(entry.getValue().getValue() != null)
+                ((ParseNode) entry.getValue().getValue()).resolveTypes();
+        }
+    }
 }
