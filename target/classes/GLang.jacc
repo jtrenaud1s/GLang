@@ -1,0 +1,443 @@
+%class Parser
+%package edu.semo.jatsz.glang
+%interface Tokens
+%next next()
+%get lexer.getToken()
+%semantic Object : lexer.getValue()
+//Symbol Tokens
+%token EQUAL ID SUB ADD LPAREN RPAREN SEMI LITERAL LCURLY RCURLY LSQUARE RSQUARE CHAR CHARS DQUOTE QUOTE COMMA LESS GREATER LE GE EQ NE
+//Keyword and Type tokens
+%token INT DOUBLE PRINT READ WHILE FOR CLASS CHARACTER STRING CLASS FUNCTION IF ELSE RETURN NULL
+%right EQUAL
+%left MULTIPLY DIVIDE
+%left POW
+%left DOT
+
+
+%{
+import edu.semo.jatsz.glang.parsenode.*;
+import edu.semo.jatsz.glang.parsenode.classnode.*;
+import edu.semo.jatsz.glang.parsenode.function.*;
+import edu.semo.jatsz.glang.parsenode.statement.*;
+import edu.semo.jatsz.glang.model.*;
+
+import java.util.ArrayList;
+%}
+
+%%
+
+entrypoint: statementList
+{
+    this.entryPoint = (ParseNode) $1;
+}
+;
+
+statementList: statement SEMI
+{
+    $$ = new StatementListNode((ParseNode) $1);
+}
+| statementList statement SEMI
+{
+    ((StatementListNode) $1).add((ParseNode) $2);
+    $$ = $1;
+}
+;
+
+statement: declaration
+| assign
+| output
+| input
+| while
+| for
+| if
+| class_definition
+| expr
+| return
+;
+
+class_definition: CLASS ID LCURLY declaration_list RCURLY
+{
+    $$ = new ClassDefinitionNode((String) $2.toString(), (SymbolTable) $4);
+}
+;
+
+class_declaration: ID ID
+{
+    $$ = new ClassDeclarationNode((String) $1, (String) $2);
+}
+;
+
+declaration_list: declaration_list declaration SEMI
+{
+    $$ = addDeclaration($1, $2);
+}
+| declaration SEMI
+{
+    $$ = addDeclaration(null, $1);
+}
+;
+
+function_definition: FUNCTION type ID LPAREN plist RPAREN LCURLY function_body RCURLY
+{
+    $$ = new FunctionDefinitionNode((Type)$2, (String)$3, (ArrayList<DeclarationNode>)$5, (StatementListNode)$8);
+}
+| FUNCTION type ID LPAREN RPAREN LCURLY function_body RCURLY
+{
+    $$ = new FunctionDefinitionNode((Type)$2, (String)$3, null, (StatementListNode)$7);
+}
+;
+
+function_body: function_body function_statement SEMI
+{
+    ((StatementListNode) $1).add((ParseNode)$2);
+    $$ = $1;
+}
+| function_statement SEMI
+{
+    $$ = new StatementListNode((ParseNode)$1);
+}
+;
+
+plist: plist COMMA declaration
+{
+    ((ArrayList<DeclarationNode>)$1).add((DeclarationNode)$3);
+    $$ = $1;
+}
+| declaration
+{
+    ArrayList<ParseNode> a = new ArrayList<>();
+    a.add((DeclarationNode)$1);
+    $$ = a;
+}
+;
+
+function_statement: declaration
+| assign
+| output
+| input
+| while
+| for
+| if
+| return
+| expr
+;
+
+return: RETURN expr
+{
+    $$ = new ReturnStatementNode((ParseNode)$2);
+}
+| RETURN
+{
+    $$ = new ReturnStatementNode(null);
+}
+;
+
+function_call: ref a_parameters
+{
+    $$ = new FunctionCallStatement((ReferenceNode)$1, (ArrayList<ParseNode>)$2, null);
+}
+| ref DOT ref a_parameters
+{
+    $$ = new FunctionCallStatement((ReferenceNode)$3, (ArrayList<ParseNode>)$4, (ReferenceNode)$1);
+}
+;
+
+a_parameters: LPAREN alist RPAREN
+{
+    $$ = $2;
+}
+| LPAREN RPAREN
+{
+    $$ = null;
+}
+;
+
+alist: alist COMMA expr
+{
+    ((ArrayList<ParseNode>)$1).add((ParseNode) $3);
+    $$=$1;
+}
+| expr
+{
+    ArrayList<ParseNode> a = new ArrayList<>();
+    a.add((ParseNode) $1);
+    $$ = a;
+}
+;
+
+type: INT
+{
+    $$ = Type.INT;
+}
+| DOUBLE
+{
+    $$ = Type.DOUBLE;
+}
+| CHARACTER
+{
+    $$ = Type.CHAR;
+}
+| STRING
+{
+    $$ = Type.STRING;
+}
+| NULL
+{
+    $$ = Type.NULL;
+}
+;
+
+while: WHILE LPAREN expr RPAREN LCURLY statementList RCURLY
+{
+    $$ = new WhileStatementNode((ParseNode)$3, (StatementListNode)$6);
+}
+;
+
+if: IF LPAREN expr RPAREN LCURLY statementList RCURLY
+{
+    $$ = new IfStatementNode((ParseNode) $3, (StatementListNode) $6, null);
+}
+| IF LPAREN expr RPAREN LCURLY statementList RCURLY else
+{
+    $$ = new IfStatementNode((ParseNode) $3, (StatementListNode) $6, (StatementListNode)$8);
+}
+;
+
+else: ELSE LCURLY statementList RCURLY
+{
+    $$ = $3;
+}
+| ELSE if
+{
+    $$ = new StatementListNode((IfStatementNode)$2);
+}
+;
+
+for: FOR LPAREN assign SEMI expr SEMI assign RPAREN LCURLY statementList RCURLY
+{
+    $$ = new ForStatementNode((AssignmentNode)$3, (ParseNode)$5, (AssignmentNode)$7, (StatementListNode)$10);
+}
+;
+
+declaration: type ID
+{
+    $$ = new DeclarationNode((Type)$1, (String) $2);
+}
+| arrayDeclaration
+| class_declaration
+| function_definition
+;
+
+arrayDeclaration: type ID square_expr
+{
+    $$ = new ArrayDeclarationNode((Type)$1, (String) $2, (ParseNode) $3);
+}
+| arrayDeclaration square_expr
+{
+    ((ArrayDeclarationNode)$1).setMulti(true, (ParseNode)$2);
+    $$ = $1;
+}
+;
+
+square_expr: LSQUARE expr RSQUARE
+{
+    $$ = $2;
+}
+| LSQUARE RSQUARE
+{
+    $$ = null;
+}
+;
+
+assign: ref EQUAL expr
+{
+    $$ = new AssignmentNode((ReferenceNode)$1, (ParseNode)$3);
+}
+| declaration EQUAL expr
+{
+    $$ = new AssignmentNode((DeclarationNode)$1, (ParseNode)$3);
+}
+;
+
+output: PRINT expr
+{
+    $$ = new StdOutNode((ParseNode)$2);
+}
+;
+
+input: READ ref
+{
+    $$ = new StdInNode((ReferenceNode) $2);
+}
+;
+
+expr: term SUB expr
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "-", (ParseNode) $3);
+}
+| term ADD expr
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "+", (ParseNode) $3);
+}
+| term
+;
+
+term: term MULTIPLY factor
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "*", (ParseNode) $3);
+}
+| term DIVIDE factor
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "/", (ParseNode) $3);
+}
+| factor
+;
+
+factor: factor POW equality
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "^", (ParseNode) $3);
+}
+| equality
+;
+
+equality: equality EQ inequality
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "==", (ParseNode) $3);
+}
+| equality NE inequality
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "~=", (ParseNode) $3);
+}
+| inequality
+;
+
+inequality: inequality LESS unary
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "<", (ParseNode) $3);
+}
+| inequality GREATER unary
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, ">", (ParseNode) $3);
+}
+| inequality LE unary
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, "<=", (ParseNode) $3);
+}
+| inequality GE unary
+{
+    $$ = new BinaryOperationNode((ParseNode) $1, ">=", (ParseNode) $3);
+}
+| unary
+;
+
+unary: SUB group
+{
+    $$ = new UnaryOperationNode("-", (ParseNode) $2 );
+}
+| group
+;
+
+group: LPAREN expr RPAREN
+{
+    $$ = new GroupNode((ParseNode)$2);
+}
+| ref
+| LITERAL
+{
+    $$ = new Symbol(Type.INT, "int-literal", (Integer) $1);
+}
+| DOUBLE
+{
+    $$ = new Symbol(Type.DOUBLE, "double-literal", (Double) $1);
+}
+| string
+| char
+| function_call
+;
+
+ref: ID
+{
+    $$ = new ReferenceNode((String) $1);
+}
+| ref LSQUARE expr RSQUARE
+{
+    $$ = new ArrayReferenceNode((ReferenceNode) $1, (ParseNode) $3);
+}
+| ref DOT ref
+{
+    $$ = new FieldReferenceNode((ReferenceNode) $1, (ReferenceNode) $3);
+}
+;
+
+string: DQUOTE CHARS DQUOTE
+{
+    $$ = new Symbol(Type.STRING, "string-literal", (String) $2);
+}
+;
+
+char: QUOTE CHAR QUOTE
+{
+    $$ = new Symbol(Type.CHAR, "char-literal", (char) $2);
+}
+;
+
+%%
+    private Lexer lexer;
+    private ParseNode entryPoint;
+    private ParseNode currentNode;
+
+    public Parser(java.io.InputStream in)
+    {
+        lexer = new Lexer(in);
+        new ParseTree();
+    }
+
+
+    public ParseNode getEntryPoint()
+    {
+        return entryPoint;
+    }
+
+    SymbolTable addDeclaration(Object sym, Object decl) {
+        if(sym == null)
+            sym = new SymbolTable();
+        SymbolTable table = (SymbolTable)sym;
+        DeclarationNode declaration = (DeclarationNode)decl;
+        if(declaration instanceof ArrayDeclarationNode) {
+            table.set(declaration.getName(), new Symbol(declaration.getType(), declaration.getName(), declaration));
+        } else if (declaration instanceof ClassDeclarationNode){
+            table.set(declaration.getName(), new ClassSymbol(((ClassDeclarationNode)declaration).getClassName(), declaration.getName(), declaration));
+        } else if (declaration instanceof FunctionDefinitionNode){
+            table.set(declaration.getName(), new FunctionSymbol(declaration.getType(), declaration.getName(), declaration));
+        } else {
+            table.set(declaration.getName(), new Symbol(declaration.getType(), declaration.getName(), null));
+        }
+        return table;
+    }
+
+
+    public int next() {
+        lexer.next();
+        return lexer.getToken();
+    }
+
+
+    public void yyerror(String msg) {
+        lexer.printError("ERROR: " + msg);
+    }
+
+
+    public static void main(String [] args) {
+        try {
+            Parser parser = new Parser(new java.io.FileInputStream(args[0]));
+            parser.next();
+            if(parser.parse()) {
+                parser.getEntryPoint().setEnvironment(ParseTree.get());
+                parser.getEntryPoint().generateSymbols();
+                parser.getEntryPoint().resolveTypes();
+                parser.getEntryPoint().evaluate();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
